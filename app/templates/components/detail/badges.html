@@ -1,0 +1,15 @@
+<div class="mt-3 p-3 border rounded bg-body-tertiary" style="font-size: .85rem;">
+    <p class="m-0">
+        <strong class="text-secondary">Criado em:</strong> {{ object.created_at|date:"d/m/Y H:i" }}
+        <span class="badge bg-secondary ms-2">
+            {{ object.user_created.get_full_name|default:object.user_created.username|default:"Não informado" }}
+        </span>
+    </p>
+
+    <p class="mt-2 m-0">
+        <strong class="text-secondary">Atualizado em:</strong> {{ object.updated_at|date:"d/m/Y H:i" }}
+        <span class="badge bg-secondary ms-2">
+            {{ object.user_updated.get_full_name|default:object.user_updated.username|default:"Não informado" }}
+        </span>
+    </p>
+</div>

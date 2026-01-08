@@ -1,0 +1,18 @@
+{% if DETAIL_LAYOUT == "minimal" %}
+    {% include "components/detail/minimal.html" with object=object %}
+
+{% elif DETAIL_LAYOUT == "table" %}
+    {% include "components/detail/table.html" with object=object %}
+
+{% elif DETAIL_LAYOUT == "cards" %}
+    {% include "components/detail/cards.html" with object=object %}
+
+{% elif DETAIL_LAYOUT == "fine" %}
+    {% include "components/detail/fine.html" with object=object %}
+
+{% elif DETAIL_LAYOUT == "badges" %}
+    {% include "components/detail/badges.html" with object=object %}
+
+{% else %}
+    <p class="text-danger">Layout de detalhes inválido: {{ DETAIL_LAYOUT }}</p>
+{% endif %}
