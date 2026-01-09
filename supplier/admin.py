@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from core.admin import BaseAdmin
+from . import models
+
+
+class SupplierAdmin(BaseAdmin):
+    list_display = ('name', 'description',)
+    search_fields = ('name',)
+
+
+admin.site.register(models.Supplier, SupplierAdmin)
