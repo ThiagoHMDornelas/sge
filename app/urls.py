@@ -5,7 +5,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #  path('logout/', admin.site.urls, name='logout'), #  LogoutView.as_view(next_page='login')
 
     path('', include('brands.urls')),
-    path('', include('category.urls'))
+    path('', include('category.urls')),
+    path('', include('supplier.urls')),
+    path('', include('product.urls')),
 ]

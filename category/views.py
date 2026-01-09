@@ -1,6 +1,7 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
+from django.db.models.functions import Lower
 
 from . import models, forms
 
@@ -13,10 +14,28 @@ class CategoryListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        name = self.request.GET.get('name')
 
+        # filtro
+        name = self.request.GET.get('name')
         if name:
             queryset = queryset.filter(name__icontains=name)
+
+        # Ordenação
+        order_by = self.request.GET.get('order_by', 'name')
+
+        # Lista de campos permitidos para ordenação
+        # Dicionário de ordenação com case-insensitive para campos de texto
+        order_mapping = {
+            'id': 'id',
+            '-id': '-id',
+            'name': Lower('name'),
+            '-name': Lower('name').desc(),
+            'description': Lower('description'),
+            '-description': Lower('description').desc(),
+        }
+
+        if order_by in order_mapping:
+            queryset = queryset.order_by(order_mapping[order_by])
 
         return queryset
 
@@ -36,7 +55,7 @@ class CategoryCreateView(CreateView):
 
         return response
 
-    
+
 class CategoryDetailView(DetailView):
     model = models.Category
     template_name = 'category_detail.html'

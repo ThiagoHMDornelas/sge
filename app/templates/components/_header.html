@@ -1,5 +1,71 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="#">Sistema de Gestão de Estoque (SGE)</a>
+
+        <!-- Título do sistema -->
+        <a class="navbar-brand fw-bold" href="/">
+            Sistema de Gestão de Estoque (SGE)
+        </a>
+
+        <!-- Botão do mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSGE" aria-controls="navbarSGE"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Conteúdo -->
+        <div class="collapse navbar-collapse" id="navbarSGE">
+
+            <!-- empurra o menu para a direita -->
+            <ul class="navbar-nav ms-auto">
+
+                <!-- Usuário logado com avatar -->
+                <li class="nav-item dropdown">
+
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+                       id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                        <!-- Avatar com iniciais -->
+                        <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-2"
+                             style="width: 35px; height: 35px;">
+                            {{ request.user.first_name|default:request.user.username|slice:":1" }}
+                        </div>
+
+                        <!-- Nome do operador -->
+                        <span>
+                            {{ request.user.get_full_name|default:request.user.username }}
+                        </span>
+                    </a>
+
+                    <!-- Menu Dropdown -->
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <i class="bi bi-person-circle"></i> Perfil
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <i class="bi bi-key"></i> Alterar senha
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>                            
+                            <a class="dropdown-item text-danger" href="#"> 
+                                <i class="bi bi-box-arrow-right"></i> Sair
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+            </ul>
+
+        </div>
+
     </div>
 </nav>

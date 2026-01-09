@@ -1,0 +1,7 @@
+.navbar .dropdown-menu {
+    min-width: 200px;
+}
+
+.navbar .dropdown-item i {
+    margin-right: 6px;
+}

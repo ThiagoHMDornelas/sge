@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load table_tags %}
 
 {% block title %}
 SGE - Marcas
 {% endblock%}
 
 {% block content %}
-
+    <h3 class="display-6">Cadastro de Marca</h3>
     <div class="row mb-3">
         <div class="col-md-6">
             <form method="get" action="{% url 'brand_list' %}">
@@ -14,6 +15,9 @@ SGE - Marcas
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-search"></i>
                     </button>
+                    <a href="{% url 'category_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-x-lg"></i>
+                    </a>                    
                 </div>
             </form>
         </div>
@@ -35,9 +39,21 @@ SGE - Marcas
 
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Descrição</th>
+                    <th>
+                        <a href="{% sort_url 'id' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            ID <i class="bi {% sort_icon_class 'id' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'name' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Nome <i class="bi {% sort_icon_class 'name' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'description' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Descrição <i class="bi {% sort_icon_class 'description' %}"></i>
+                        </a>
+                    </th>
                     <th class="text-center">Ações</th>
                 </tr>
             </thead>

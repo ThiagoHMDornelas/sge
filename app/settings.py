@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'core',
     'brands',
     'category',
     'supplier',
@@ -71,7 +72,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'core.context_processors.detail_layout', # usado para ativar os detalhes de informação sobre criação/alteração
+                'core.context_processors.detail_layout',  # usado para ativar os detalhes de informação sobre criação/alteração
             ],
         },
     },
