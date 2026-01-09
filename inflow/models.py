@@ -1,11 +1,11 @@
 from django.db import models
-from django.conf import settings
+from core.models import BaseModel
 
 from supplier.models import Supplier
 from product.models import Product
 
 
-class InFlows(models.Model):
+class InFlow(BaseModel):
     supplier = models.ForeignKey(
         Supplier,
         on_delete=models.PROTECT,
@@ -18,18 +18,6 @@ class InFlows(models.Model):
     )
     quantity = models.IntegerField()
     description = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    user_created = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-        related_name="inflow_created"
-    )
-    user_updated = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-        related_name="inflow_updated"
-    )
 
     class Meta:
         ordering = ['-created_at']

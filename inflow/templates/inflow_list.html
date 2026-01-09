@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load table_tags %}
+
+{% block title %}
+SGE - Entradas
+{% endblock%}
+
+{% block content %}
+    <h3 class="display-6">Registro de Entrada</h3>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form method="get" action="{% url 'inflow_list' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="product" placeholder="Produto" value="{{ request.GET.product }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <a href="{% url 'inflow_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-x-lg"></i>
+                    </a>                    
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'inflow_create' %}" class="btn btn-success float-end">
+                <i class="bi bi-plus"></i> Registrar
+            </a>
+        </div>        
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover" style="table-layout: fixed; width: 100%;">
+            <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 5%;">
+                <col style="width: 35%;">
+                <col style="width: 30%;">
+                <col style="width: 10%;">
+                <col style="width: 5%;">
+            </colgroup>
+
+            <thead>
+                <tr>
+                    <th>
+                        <a href="{% sort_url 'created_at' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Data Entrada <i class="bi {% sort_icon_class 'created_at' %}"></i>
+                        </a>
+                    </th>                      
+                    <th>
+                        <a href="{% sort_url 'id' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            ID <i class="bi {% sort_icon_class 'id' %}"></i>
+                        </a>
+                    </th>                    
+                    <th>
+                        <a href="{% sort_url 'product' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Produto <i class="bi {% sort_icon_class 'product' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'supplier' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Fornecedor <i class="bi {% sort_icon_class 'supplier' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'quantity' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Quantidade <i class="bi {% sort_icon_class 'quantity' %}"></i>
+                        </a>
+                    </th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for inflow in inflows %}
+                    <tr>
+                        <td> {{ inflow.created_at|date:"d/m/Y H:i:s" }} </td>
+                        <td> {{ inflow.id }} </td>
+                        <td> {{ inflow.product }} </td>
+                        <td> {{ inflow.supplier }} </td>
+                        <td> {{ inflow.quantity }} </td>
+                        <td>
+                            <a href="{% url 'inflow_detail' inflow.id %}" class="btn btn-info btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include "components/_pagination.html" %}
+
+{% endblock %}

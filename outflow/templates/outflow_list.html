@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load table_tags %}
+
+{% block title %}
+SGE - Saídas
+{% endblock%}
+
+{% block content %}
+    <h3 class="display-6">Registro de Saídas</h3>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form method="get" action="{% url 'outflow_list' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="product" placeholder="Produto" value="{{ request.GET.product }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <a href="{% url 'outflow_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-x-lg"></i>
+                    </a>                    
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'outflow_create' %}" class="btn btn-success float-end">
+                <i class="bi bi-plus"></i> Registrar
+            </a>
+        </div>        
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover" style="table-layout: fixed; width: 100%;">
+            <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 5%;">
+                <col style="width: 65%;">
+                <col style="width: 10%;">
+                <col style="width: 5%;">
+            </colgroup>
+
+            <thead>
+                <tr>
+                    <th>
+                        <a href="{% sort_url 'created_at' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Data Saída <i class="bi {% sort_icon_class 'created_at' %}"></i>
+                        </a>
+                    </th>                      
+                    <th>
+                        <a href="{% sort_url 'id' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            ID <i class="bi {% sort_icon_class 'id' %}"></i>
+                        </a>
+                    </th>                    
+                    <th>
+                        <a href="{% sort_url 'product' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Produto <i class="bi {% sort_icon_class 'product' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'quantity' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
+                            Quantidade <i class="bi {% sort_icon_class 'quantity' %}"></i>
+                        </a>
+                    </th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for outflow in outflows %}
+                    <tr>
+                        <td>{{ outflow.created_at|date:"d/m/Y H:i:s" }}</td>
+                        <td> {{ outflow.id }} </td>
+                        <td> {{ outflow.product }} </td>
+                        <td> {{ outflow.quantity }} </td>
+                        <td>
+                            <a href="{% url 'outflow_detail' outflow.id %}" class="btn btn-info btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include "components/_pagination.html" %}
+
+{% endblock %}
