@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h3 class="display-6">Detalhes do Produto</h3>
+
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">{{ product.name }}</h3>
+                <p class="card-text">Categoria: {{ product.category }}</p>
+                <p class="card-text">Marca: {{ product.brand }}</p>
+                <p class="card-text">{{ product.description }}</p>
+                <p class="card-text">Número de Série: <strong>{{ product.serie_number }}</strong></p>
+                <p class="card-text">Preço de Custo: <strong>R$ {{ product.cost_price }}</strong></p>
+                <p class="card-text">Preço de Venda: <strong>R$ {{ product.selling_price }}</strong></p>
+                <p class="card-text">Quantidade em Estoque: <strong>{{ product.quantity }}</strong></p>
+            </div>
+        </div>
+        
+        {% include "components/_detail_info.html" with object=product %}
+        <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">Voltar para a Lista de Produtos</a>
+    </div>
+{% endblock %}
