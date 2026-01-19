@@ -3,7 +3,10 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.db.models.functions import Lower
 
+from app import metrics
 from . import models, forms
+from category.models import Category
+from brands.models import Brand
 
 
 class ProductListView(ListView):
@@ -12,6 +15,14 @@ class ProductListView(ListView):
     context_object_name = 'products'
     paginate_by = 5
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['brands'] = Brand.objects.all()
+        context['product_metrics'] = metrics.get_product_metrics()
+
+        return context
+
     def get_queryset(self):
         queryset = super().get_queryset()
 
@@ -19,6 +30,18 @@ class ProductListView(ListView):
         name = self.request.GET.get('name')
         if name:
             queryset = queryset.filter(name__icontains=name)
+
+        serie_number = self.request.GET.get('serie_number')
+        if serie_number:
+            queryset = queryset.filter(serie_number__icontains=serie_number)
+
+        category = self.request.GET.get('category')
+        if category:
+            queryset = queryset.filter(category_id=category)
+
+        brand = self.request.GET.get('brand')
+        if brand:
+            queryset = queryset.filter(brand_id=brand)
 
         # Ordenação
         order_by = self.request.GET.get('order_by', 'name')

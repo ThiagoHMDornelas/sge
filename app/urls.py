@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 # from django.contrib.auth import views as auth_views
-# from . import views
+
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,4 +14,5 @@ urlpatterns = [
     path('', include('product.urls')),
     path('', include('inflow.urls')),
     path('', include('outflow.urls')),
+    path('', views.home, name='home')
 ]

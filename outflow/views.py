@@ -3,6 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.db.models.functions import Lower
 
+from app import metrics
 from . import models, forms
 
 
@@ -40,6 +41,12 @@ class OutflowListView(ListView):
             queryset = queryset.order_by(order_mapping[order_by])
 
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sales_metrics'] = metrics.get_sales_metrics()
+
+        return context
 
 
 class OutflowCreateView(CreateView):
