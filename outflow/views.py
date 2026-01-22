@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
@@ -7,7 +8,7 @@ from app import metrics
 from . import models, forms
 
 
-class OutflowListView(ListView):
+class OutflowListView(LoginRequiredMixin, ListView):
     model = models.OutFlow
     template_name = 'outflow_list.html'
     context_object_name = 'outflows'
@@ -49,7 +50,7 @@ class OutflowListView(ListView):
         return context
 
 
-class OutflowCreateView(CreateView):
+class OutflowCreateView(LoginRequiredMixin, CreateView):
     model = models.OutFlow
     template_name = 'outflow_create.html'
     form_class = forms.OutflowForm
@@ -65,7 +66,7 @@ class OutflowCreateView(CreateView):
         return response
 
 
-class OutflowDetailView(DetailView):
+class OutflowDetailView(LoginRequiredMixin, DetailView):
     model = models.OutFlow
     template_name = 'outflow_detail.html'
     context_object_name = 'outflow'

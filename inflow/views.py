@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
@@ -6,7 +7,7 @@ from django.db.models.functions import Lower
 from . import models, forms
 
 
-class InflowListView(ListView):
+class InflowListView(LoginRequiredMixin, ListView):
     model = models.InFlow
     template_name = 'inflow_list.html'
     context_object_name = 'inflows'
@@ -44,7 +45,7 @@ class InflowListView(ListView):
         return queryset
 
 
-class InflowCreateView(CreateView):
+class InflowCreateView(LoginRequiredMixin, CreateView):
     model = models.InFlow
     template_name = 'inflow_create.html'
     form_class = forms.InflowForm
@@ -60,7 +61,7 @@ class InflowCreateView(CreateView):
         return response
 
 
-class InflowDetailView(DetailView):
+class InflowDetailView(LoginRequiredMixin, DetailView):
     model = models.InFlow
     template_name = 'inflow_detail.html'
     context_object_name = 'inflow'

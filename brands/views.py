@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
@@ -6,7 +7,7 @@ from django.db.models.functions import Lower
 from . import models, forms
 
 
-class BrandListView(ListView):
+class BrandListView(LoginRequiredMixin, ListView):
     model = models.Brand
     template_name = 'brand_list.html'
     context_object_name = 'brands'
@@ -40,7 +41,7 @@ class BrandListView(ListView):
         return queryset
 
 
-class BrandCreateView(CreateView):
+class BrandCreateView(LoginRequiredMixin, CreateView):
     model = models.Brand
     template_name = 'brand_create.html'
     form_class = forms.BrandForm
@@ -56,20 +57,20 @@ class BrandCreateView(CreateView):
         return response
 
 
-class BrandDetailView(DetailView):
+class BrandDetailView(LoginRequiredMixin, DetailView):
     model = models.Brand
     template_name = 'brand_detail.html'
     context_object_name = 'brand'
 
 
-class BrandUpdateView(UpdateView):
+class BrandUpdateView(LoginRequiredMixin, UpdateView):
     model = models.Brand
     template_name = 'brand_update.html'
     form_class = forms.BrandForm
     success_url = reverse_lazy('brand_list')
 
 
-class BrandDeleteView(DeleteView):
+class BrandDeleteView(LoginRequiredMixin, DeleteView):
     model = models.Brand
     template_name = 'brand_delete.html'
     # form_class = forms.BrandForm
