@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
@@ -7,11 +7,12 @@ from django.db.models.functions import Lower
 from . import models, forms
 
 
-class CategoryListView(LoginRequiredMixin, ListView):
+class CategoryListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = models.Category
     template_name = 'category_list.html'
     context_object_name = 'categories'
     paginate_by = 5
+    permission_required = 'category.view_category'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -41,11 +42,12 @@ class CategoryListView(LoginRequiredMixin, ListView):
         return queryset
 
 
-class CategoryCreateView(LoginRequiredMixin, CreateView):
+class CategoryCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = models.Category
     template_name = 'category_create.html'
     form_class = forms.CategoryForm
     success_url = reverse_lazy('category_list')
+    permission_required = 'category.add_category'
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -57,20 +59,23 @@ class CategoryCreateView(LoginRequiredMixin, CreateView):
         return response
 
 
-class CategoryDetailView(LoginRequiredMixin, DetailView):
+class CategoryDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = models.Category
     template_name = 'category_detail.html'
     context_object_name = 'category'
+    permission_required = 'category.view_category'
 
 
-class CategoryUpdateView(LoginRequiredMixin, UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = models.Category
     template_name = 'category_update.html'
     form_class = forms.CategoryForm
     success_url = reverse_lazy('category_list')
+    permission_required = 'category.change_category'
 
 
-class CategoryDeleteView(LoginRequiredMixin, DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = models.Category
     template_name = 'category_delete.html'
     success_url = reverse_lazy('category_list')
+    permission_required = 'category.delete_category'

@@ -21,11 +21,14 @@ SGE - Entradas
                 </div>
             </form>
         </div>
-        <div class="col-md-6">
-            <a href="{% url 'inflow_create' %}" class="btn btn-success float-end">
-                <i class="bi bi-plus"></i> Registrar
-            </a>
-        </div>        
+
+        {% if perms.inflow.add_inflow %}
+            <div class="col-md-6">
+                <a href="{% url 'inflow_create' %}" class="btn btn-success float-end">
+                    <i class="bi bi-plus"></i> Registrar
+                </a>
+            </div>
+        {% endif %} 
     </div>
 
     <div class="table-responsive">
@@ -78,10 +81,14 @@ SGE - Entradas
                         <td> {{ inflow.product }} </td>
                         <td> {{ inflow.supplier }} </td>
                         <td> {{ inflow.quantity }} </td>
-                        <td>
-                            <a href="{% url 'inflow_detail' inflow.id %}" class="btn btn-info btn-sm">
-                                <i class="bi bi-eye"></i>
-                            </a>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-1 flex-wrap"></div>
+                                {% if perms.inflow.view_inflow %}
+                                    <a href="{% url 'inflow_detail' inflow.id %}" class="btn btn-info btn-sm">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}
