@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy, reverse
@@ -7,6 +8,7 @@ from django.db.models.functions import Lower
 
 from app import metrics
 from . import models, forms, serializers
+from core.permissions import ModelPermissionsByMethod
 
 
 class OutflowListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -79,8 +81,10 @@ class OutflowDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
 class OutflowCreateListAPIView(generics.ListCreateAPIView):
     queryset = models.OutFlow.objects.all()
     serializer_class = serializers.OutflowSerializer
+    permission_classes = [IsAuthenticated, ModelPermissionsByMethod]
 
 
 class OutflowRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.OutFlow.objects.all()
     serializer_class = serializers.OutflowSerializer
+    permission_classes = [IsAuthenticated, ModelPermissionsByMethod]

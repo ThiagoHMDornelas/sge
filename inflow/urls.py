@@ -7,5 +7,5 @@ urlpatterns = [
     path('inflows/<int:pk>/detail/', views.InflowDetailView.as_view(), name='inflow_detail'),
 
     path('api/v1/inflows/', views.InflowCreateListAPIView.as_view(), name='inflows-create-list-api-view'),
-    path('api/v1/inflows/<int:pk>/', views.InflowRetrieveAPIView.as_view(), name='inflows-detail-api-view'),  
+    path('api/v1/inflows/<int:pk>/', views.InflowRetrieveAPIView.as_view(), name='inflows-detail-api-view'),
 ]

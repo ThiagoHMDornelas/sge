@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
@@ -6,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.db.models.functions import Lower
 
 from . import models, forms, serializers
+from core.permissions import ModelPermissionsByMethod
 
 
 class SupplierListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -85,8 +87,10 @@ class SupplierDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
 class SupplierCreateListAPIView(generics.ListCreateAPIView):
     queryset = models.Supplier.objects.all()
     serializer_class = serializers.SupplierSerializer
+    permission_classes = [IsAuthenticated, ModelPermissionsByMethod]
 
 
 class SupplierRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Supplier.objects.all()
     serializer_class = serializers.SupplierSerializer
+    permission_classes = [IsAuthenticated, ModelPermissionsByMethod]

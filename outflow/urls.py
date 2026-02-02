@@ -7,5 +7,5 @@ urlpatterns = [
     path('outflows/<int:pk>/detail/', views.OutflowDetailView.as_view(), name='outflow_detail'),
 
     path('api/v1/outflows/', views.OutflowCreateListAPIView.as_view(), name='outflows-create-list-api-view'),
-    path('api/v1/outflows/<int:pk>/', views.OutflowRetrieveUpdateDestroyAPIView.as_view(), name='outflows-detail-api-view'), 
+    path('api/v1/outflows/<int:pk>/', views.OutflowRetrieveUpdateDestroyAPIView.as_view(), name='outflows-detail-api-view'),
 ]

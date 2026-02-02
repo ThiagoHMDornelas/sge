@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy, reverse
@@ -6,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.db.models.functions import Lower
 
 from . import models, forms, serializers
+from core.permissions import ModelPermissionsByMethod
 
 
 class InflowListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -74,8 +76,10 @@ class InflowDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
 class InflowCreateListAPIView(generics.ListCreateAPIView):
     queryset = models.InFlow.objects.all()
     serializer_class = serializers.InflowSerializer
+    permission_classes = [IsAuthenticated, ModelPermissionsByMethod]
 
 
 class InflowRetrieveAPIView(generics.RetrieveAPIView):
     queryset = models.InFlow.objects.all()
     serializer_class = serializers.InflowSerializer
+    permission_classes = [IsAuthenticated, ModelPermissionsByMethod]

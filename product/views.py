@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
@@ -9,6 +10,7 @@ from app import metrics
 from . import models, forms, serializers
 from category.models import Category
 from brands.models import Brand
+from core.permissions import ModelPermissionsByMethod
 
 
 class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -112,8 +114,10 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
 class ProductCreateListAPIView(generics.ListCreateAPIView):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
+    permission_classes = [IsAuthenticated, ModelPermissionsByMethod]
 
 
 class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
+    permission_classes = [IsAuthenticated, ModelPermissionsByMethod]
