@@ -26,6 +26,8 @@ load_dotenv(BASE_DIR / '.env')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-default-key')
+SESSION_COOKIE_NAME = os.getenv('SESSION_COOKIE_NAME', 'session_sge')
+CSRF_COOKIE_NAME = os.getenv('CSRF_COOKIE_NAME', 'csrf_sge')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
