@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 
 # Lê o banco ativo do .env (padrão: default)
-ENVIRONMENT = os.getenv('DB_ENV', 'local')
+ENVIRONMENT = os.getenv('DB_ENV', 'dev')
 
 if ENVIRONMENT == 'prd':
     DATABASES = {
@@ -113,13 +113,30 @@ if ENVIRONMENT == 'prd':
         }
     }
 else:
-    DATABASES = {
-        'default': {
+    # Lê o banco ativo do .env (padrão: default)
+    ACTIVE_DB = os.getenv('ACTIVE_DB', 'sqlite')
+
+    DATABASE_CONFIGS = {
+        'sqlite': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
+        },
+        'postgresql': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('POSTGRES_DB'),
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': os.getenv('POSTGRES_HOST'),
+            'PORT': os.getenv('POSTGRES_PORT'),
         }
     }
 
+    if ACTIVE_DB not in DATABASE_CONFIGS:
+        raise ValueError(f"Banco inválido: {ACTIVE_DB}")
+
+    DATABASES = {
+        'default': DATABASE_CONFIGS[ACTIVE_DB]
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
