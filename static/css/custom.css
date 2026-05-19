@@ -5,3 +5,22 @@
 .navbar .dropdown-item i {
     margin-right: 6px;
 }
+
+.collapse {
+    visibility: visible;
+}
+
+.sidebar-collapse:not(.show) {
+    display: none;
+}
+
+.sidebar-collapse.show,
+.sidebar-collapse.d-sm-block {
+    display: block !important;
+}
+
+@media (min-width: 576px) {
+    .sidebar-collapse.d-sm-block {
+        display: block !important;
+    }
+}
