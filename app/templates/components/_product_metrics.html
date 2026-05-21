@@ -1,44 +1,57 @@
-<div class="card mt-4">
-    <div class="card-body">
-        <div class="row">
+<div class="row g-4 mt-1">
+    <div class="col-md-3">
+        <div class="metric-card violet">
+            <div class="d-flex align-items-center gap-3">
+                <div class="metric-icon" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
+                    <i class="fas fa-boxes-stacked"></i>
+                </div>
+                <div>
+                    <div class="metric-label">Quantidade de Produtos</div>
+                    <div class="metric-value">{{ product_metrics.total_quantity }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            <div class="col-md-3">
-                <div class="card bg-primary">
-                    <div class="card-body">
-                        <h5 class="card-title">Quantidade de Produtos</h5>
-                        <p class="card-text text white font-weight-bold display-6">{{ product_metrics.total_quantity }}</p>
-                    </div>
+    <div class="col-md-3">
+        <div class="metric-card red">
+            <div class="d-flex align-items-center gap-3">
+                <div class="metric-icon" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div>
+                    <div class="metric-label">Custo do Estoque</div>
+                    <div class="metric-value">R$ {{ product_metrics.total_cost_price }}</div>
                 </div>
             </div>
-
-            <div class="col-md-3">
-                <div class="card bg-danger">
-                    <div class="card-body">
-                        <h5 class="card-title">Custo do Estoque</h5>
-                        <p class="card-text text white font-weight-bold display-6">R$ {{ product_metrics.total_cost_price }}</p>
-                    </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="metric-card green">
+            <div class="d-flex align-items-center gap-3">
+                <div class="metric-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div>
+                    <div class="metric-label">Valor do Estoque</div>
+                    <div class="metric-value">R$ {{ product_metrics.total_selling_price }}</div>
                 </div>
             </div>
-            
-            <div class="col-md-3">
-                <div class="card bg-success">
-                    <div class="card-body">
-                        <h5 class="card-title">Valor do Estoque</h5>
-                        <p class="card-text text white font-weight-bold display-6">R$ {{ product_metrics.total_selling_price }}</p>
-                    </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="metric-card blue">
+            <div class="d-flex align-items-center gap-3">
+                <div class="metric-icon" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <div class="metric-label">Lucro do Estoque</div>
+                    <div class="metric-value">R$ {{ product_metrics.total_profit }}</div>
                 </div>
             </div>
-            
-            <div class="col-md-3">
-                <div class="card bg-primary">
-                    <div class="card-body">
-                        <h5 class="card-title">Lucro do Estoque</h5>
-                        <p class="card-text text white font-weight-bold display-6">R$ {{ product_metrics.total_profit }}</p>
-                    </div>
-                </div>
-            </div>
-                  
-
         </div>
     </div>
 </div>

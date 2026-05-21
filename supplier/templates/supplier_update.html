@@ -1,19 +1,30 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    <div class="container mt-4">
-        <h3 class="display-6">Editar Fornecedores</h3>
+{% block title %}SGE - Editar Fornecedor{% endblock %}
 
-        <div class="card">
-            <div class="card-body">
-                <form method="post" class="form">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Salvar Fornecedor</button>
-                </form>
+{% block content %}
+    <div class="page-header">
+        <h3><i class="fas fa-truck me-2" style="color: var(--sge-violet-light);"></i>Editar Fornecedor</h3>
+        <a href="{% url 'supplier_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Voltar
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" class="form">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Salvar Fornecedor
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-
-        <a href="{% url 'supplier_list' %}" class="btn btn-secondary mt-3">Cancelar e Voltar para a Lista de Fornecedores</a>
     </div>
 {% endblock %}

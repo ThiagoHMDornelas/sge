@@ -18,14 +18,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     {% if perms.outflow.view_outflow %}    
-        <div class="row mt-4 justify-content-center">
-            <div class="col-md-6 text-center">
-                <h5 class="text-center mb-3">Valor de vendas (Últimos 7 Dias)</h5>
-                <canvas id="dailySalesChart"></canvas>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-line me-2" style="color: var(--sge-violet-light);"></i>Valor de Vendas (&Uacute;ltimos 7 Dias)</h5>
+                    <canvas id="dailySalesChart"></canvas>
+                </div>
             </div>
-            <div class="col-md-6 text-center">
-                <h5 class="text-center mb-3">Quantidade de Vendas Diárias</h5>
-                <canvas id="dailySalesQuantityChart"></canvas>
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-bar me-2" style="color: var(--sge-violet-light);"></i>Quantidade de Vendas Di&aacute;rias</h5>
+                    <canvas id="dailySalesQuantityChart"></canvas>
+                </div>
             </div>
 
             <script>
@@ -42,16 +46,33 @@
                                 datasets: [{
                                     label: 'Valor em vendas',
                                     data: dailySalesData.values,
-                                    fill: false,
-                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    fill: true,
+                                    borderColor: '#8b5cf6',
+                                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
                                     borderWidth: 2,
-                                    tension: 0.5
+                                    tension: 0.4,
+                                    pointBackgroundColor: '#8b5cf6',
+                                    pointBorderColor: '#8b5cf6',
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
                                     }]
                                 },
                             options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        labels: { color: '#94a3b8' }
+                                    }
+                                },
                                 scales: {
                                     y: {
-                                        beginAtZero: true
+                                        beginAtZero: true,
+                                        grid: { color: 'rgba(255,255,255,0.05)' },
+                                        ticks: { color: '#64748b' }
+                                    },
+                                    x: {
+                                        grid: { color: 'rgba(255,255,255,0.05)' },
+                                        ticks: { color: '#64748b' }
                                     }
                                 }
                             }
@@ -65,15 +86,28 @@
                             datasets: [{
                                 label: 'Quantidade de Vendas',
                                 data: dailySalesQuantityData.values,
-                                backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth: 1
+                                backgroundColor: 'rgba(139, 92, 246, 0.6)',
+                                borderColor: '#8b5cf6',
+                                borderWidth: 1,
+                                borderRadius: 4,
                             }]
                         },
                         options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: { color: '#94a3b8' }
+                                }
+                            },
                             scales: {
                                 y: {
-                                    beginAtZero: true
+                                    beginAtZero: true,
+                                    grid: { color: 'rgba(255,255,255,0.05)' },
+                                    ticks: { color: '#64748b' }
+                                },
+                                x: {
+                                    grid: { color: 'rgba(255,255,255,0.05)' },
+                                    ticks: { color: '#64748b' }
                                 }
                             }
                         }
@@ -84,20 +118,18 @@
     {% endif %}   
 
     {% if perms.product.view_product %}    
-        <div class="row mt-4 justify-content-center">
-            <div class="col-md-6 text-center">
-                <h5 class="mb-3">Produtos por Categoria</h5>
-                <div class="mb-4"></div>
-                <div class="embed-responsive embed-responsive-1by1" style="width: 400px; display: inline-block;">
-                    <canvas id="productByCategoryChart" class="embed-responsive-item"></canvas>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-pie me-2" style="color: var(--sge-violet-light);"></i>Produtos por Categoria</h5>
+                    <canvas id="productByCategoryChart"></canvas>
                 </div>
             </div>
 
-            <div class="col-md-6 text-center">
-                <h5 class="mb-3">Produtos por Marca</h5>
-                <div class="mb-4"></div>
-                <div style="width: 400px; display: inline-block;">
-                    <canvas id="productByBrandChart" class="embed-responsive-item"></canvas>
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-pie me-2" style="color: var(--sge-violet-light);"></i>Produtos por Marca</h5>
+                    <canvas id="productByBrandChart"></canvas>
                 </div>
             </div>
 
@@ -113,13 +145,19 @@
                             labels: Object.keys(productCountByCategory),
                             datasets: [{
                                 data: Object.values(productCountByCategory),
-                                borderWidth: 1
+                                backgroundColor: [
+                                    '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#6366f1'
+                                ],
+                                borderWidth: 0
                             }]
                         },
                         options: {
+                            responsive: true,
                             plugins: {
                                 legend: {
-                                display: false
+                                    display: true,
+                                    position: 'bottom',
+                                    labels: { color: '#94a3b8', padding: 15 }
                                 },
                             }
                         }
@@ -132,13 +170,19 @@
                             labels: Object.keys(productCountByBrand),
                             datasets: [{
                                 data: Object.values(productCountByBrand),
-                                borderWidth: 1
+                                backgroundColor: [
+                                    '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#6366f1'
+                                ],
+                                borderWidth: 0
                             }]
                         },
                         options: {
+                            responsive: true,
                             plugins: {
                                 legend: {
-                                display: false
+                                    display: true,
+                                    position: 'bottom',
+                                    labels: { color: '#94a3b8', padding: 15 }
                                 },
                             }
                         }

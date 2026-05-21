@@ -1,75 +1,67 @@
-<div class="row flex-nowrap">
-    <div class="col-auto px-0 bg-dark">
-        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white">
-            <button class="btn btn-dark d-block d-sm-none mb-3" type="button" data-bs-toggle="collapse"
-                data-bs-target="#menuCollapse" aria-expanded="false" aria-controls="menuCollapse">
-                <i class="bi bi-list fs-4"></i>
-            </button>
-            
-            <div class="sidebar-collapse d-sm-block" id="menuCollapse">
-                <ul class="nav flex-column align-items-start" id="menu">
-                    <li>
-                        <a href="{% url 'home' %}" class="nav-link px-0 align-middle">
-                            <i class="bi bi-speedometer2 fs-4"></i>
-                            <span class="ms-1">Dashboard</span>
-                        </a>
-                    </li>
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-section-title">Principal</div>
+    <ul class="nav flex-column" id="menu">
+        <li>
+            <a href="{% url 'home' %}" class="nav-link{% if request.resolver_match.url_name == 'home' %} active{% endif %}">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
 
-                    {% if perms.supplier.view_supplier %}
-                        <li>
-                            <a href="{% url 'supplier_list' %}" class="nav-link px-0 align-middle">
-                                <i class="bi bi-truck fs-4"></i>
-                                <span class="ms-1">Fornecedores</span>
-                            </a>
-                        </li>
-                    {% endif %}
+        {% if perms.supplier.view_supplier %}
+            <li>
+                <a href="{% url 'supplier_list' %}" class="nav-link{% if request.resolver_match.url_name == 'supplier_list' %} active{% endif %}">
+                    <i class="bi bi-truck"></i>
+                    <span>Fornecedores</span>
+                </a>
+            </li>
+        {% endif %}
 
-                    {% if perms.brands.view_brand %}
-                        <li>
-                            <a href="{% url 'brand_list' %}" class="nav-link px-0 align-middle">
-                                <i class="bi bi-shop fs-4"></i>
-                                <span class="ms-1">Marcas</span>
-                            </a>
-                        </li>
-                    {% endif %}
+        {% if perms.brands.view_brand %}
+            <li>
+                <a href="{% url 'brand_list' %}" class="nav-link{% if request.resolver_match.url_name == 'brand_list' %} active{% endif %}">
+                    <i class="bi bi-shop"></i>
+                    <span>Marcas</span>
+                </a>
+            </li>
+        {% endif %}
 
-                    {% if perms.category.view_category %}
-                        <li>
-                            <a href="{% url 'category_list' %}" class="nav-link px-0 align-middle">
-                                <i class="bi bi-tags fs-4"></i>
-                                <span class="ms-1">Categorias</span>
-                            </a>
-                        </li>
-                    {% endif %}
+        {% if perms.category.view_category %}
+            <li>
+                <a href="{% url 'category_list' %}" class="nav-link{% if request.resolver_match.url_name == 'category_list' %} active{% endif %}">
+                    <i class="bi bi-tags"></i>
+                    <span>Categorias</span>
+                </a>
+            </li>
+        {% endif %}
 
-                    {% if perms.product.view_product %}
-                        <li>
-                            <a href="{% url 'product_list' %}" class="nav-link px-0 align-middle">
-                                <i class="bi bi-box-seam fs-4"></i>
-                                <span class="ms-1">Produtos</span>
-                            </a>
-                        </li>
-                    {% endif %}
+        {% if perms.product.view_product %}
+            <li>
+                <a href="{% url 'product_list' %}" class="nav-link{% if request.resolver_match.url_name == 'product_list' %} active{% endif %}">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Produtos</span>
+                </a>
+            </li>
+        {% endif %}
 
-                    {% if perms.inflow.view_inflow %}
-                        <li>
-                            <a href="{% url 'inflow_list' %}" class="nav-link px-0 align-middle">
-                                <i class="bi bi-arrow-down-left-square fs-4"></i>
-                                <span class="ms-1">Entradas</span>
-                            </a>
-                        </li>
-                    {% endif %}
+        <div class="sidebar-section-title mt-3">{% if perms.inflow.view_inflow or perms.outflow.view_outflow %}Movimenta&ccedil;&atilde;o{% endif %}</div>
 
-                    {% if perms.outflow.view_outflow %}
-                        <li>
-                            <a href="{% url 'outflow_list' %}" class="nav-link px-0 align-middle">
-                                <i class="bi bi-arrow-up-right-square fs-4"></i>
-                                <span class="ms-1">Saídas</span>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-            <hr>
-        </div>
-  </div>
+        {% if perms.inflow.view_inflow %}
+            <li>
+                <a href="{% url 'inflow_list' %}" class="nav-link{% if request.resolver_match.url_name == 'inflow_list' %} active{% endif %}">
+                    <i class="bi bi-arrow-down-left-square"></i>
+                    <span>Entradas</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% if perms.outflow.view_outflow %}
+            <li>
+                <a href="{% url 'outflow_list' %}" class="nav-link{% if request.resolver_match.url_name == 'outflow_list' %} active{% endif %}">
+                    <i class="bi bi-arrow-up-right-square"></i>
+                    <span>Sa&iacute;das</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

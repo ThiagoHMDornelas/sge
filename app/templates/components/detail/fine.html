@@ -1,17 +1,21 @@
-<div class="mt-3 p-3 border-start border-4 border-primary rounded bg-body-tertiary" style="font-size: .85rem;">
+<div class="detail-info" style="border-left: 3px solid var(--sge-violet);">
     <p class="m-0">
-        <strong class="text-secondary">Criado em:</strong>
+        <strong style="color: var(--sge-text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">
+            <i class="bi bi-clock-history me-1" style="color: var(--sge-violet-light);"></i> Criado em:
+        </strong>
         {{ object.created_at|date:"d/m/Y H:i" }}
-        <span class="text-muted ms-2">
-            ({{ object.user_created.get_full_name|default:object.user_created.username|default:"Não informado" }})
+        <span style="background: rgba(139, 92, 246, 0.12); color: var(--sge-violet-lighter); padding: 2px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">
+            {{ object.user_created.get_full_name|default:object.user_created.username|default:"N&atilde;o informado" }}
         </span>
     </p>
 
     <p class="mt-2 m-0">
-        <strong class="text-secondary">Atualizado em:</strong>
+        <strong style="color: var(--sge-text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">
+            <i class="bi bi-arrow-clockwise me-1" style="color: var(--sge-violet-light);"></i> Atualizado em:
+        </strong>
         {{ object.updated_at|date:"d/m/Y H:i" }}
-        <span class="text-muted ms-2">
-            ({{ object.user_updated.get_full_name|default:object.user_updated.username|default:"Não informado" }})
+        <span style="background: rgba(139, 92, 246, 0.12); color: var(--sge-violet-lighter); padding: 2px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">
+            {{ object.user_updated.get_full_name|default:object.user_updated.username|default:"N&atilde;o informado" }}
         </span>
     </p>
 </div>

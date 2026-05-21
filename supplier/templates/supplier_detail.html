@@ -1,17 +1,28 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    <div class="container mt-4">
-        <h3 class="display-6">Detalhes do Fornecedor</h3>
+{% block title %}SGE - Detalhes do Fornecedor{% endblock %}
 
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">{{ supplier.name }}</h3>
-                <p class="card-text">{{ supplier.description }}</p>
-            </div>
+{% block content %}
+    <div class="page-header">
+        <h3><i class="fas fa-truck me-2" style="color: var(--sge-violet-light);"></i>Detalhes do Fornecedor</h3>
+        <div class="d-flex gap-2">
+            {% if perms.supplier.change_supplier %}
+                <a href="{% url 'supplier_update' supplier.id %}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-pencil me-1"></i> Editar
+                </a>
+            {% endif %}
+            <a href="{% url 'supplier_list' %}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Voltar
+            </a>
         </div>
-        
-        {% include "components/_detail_info.html" with object=supplier %}
-        <a href="{% url 'supplier_list' %}" class="btn btn-secondary mt-3">Voltar para a Lista de Fornecedores</a>
     </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title" style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em;">{{ supplier.name }}</h3>
+            <p class="card-text" style="color: var(--sge-text-muted);">{{ supplier.description }}</p>
+        </div>
+    </div>
+    
+    {% include "components/_detail_info.html" with object=supplier %}
 {% endblock %}

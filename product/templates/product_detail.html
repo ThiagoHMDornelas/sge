@@ -1,23 +1,67 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    <div class="container mt-4">
-        <h3 class="display-6">Detalhes do Produto</h3>
+{% block title %}SGE - Detalhes do Produto{% endblock %}
 
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">{{ product.name }}</h3>
-                <p class="card-text">Categoria: {{ product.category }}</p>
-                <p class="card-text">Marca: {{ product.brand }}</p>
-                <p class="card-text">{{ product.description }}</p>
-                <p class="card-text">Número de Série: <strong>{{ product.serie_number }}</strong></p>
-                <p class="card-text">Preço de Custo: <strong>R$ {{ product.cost_price }}</strong></p>
-                <p class="card-text">Preço de Venda: <strong>R$ {{ product.selling_price }}</strong></p>
-                <p class="card-text">Quantidade em Estoque: <strong>{{ product.quantity }}</strong></p>
+{% block content %}
+    <div class="page-header">
+        <h3><i class="fas fa-box-seam me-2" style="color: var(--sge-violet-light);"></i>Detalhes do Produto</h3>
+        <div class="d-flex gap-2">
+            {% if perms.product.change_product %}
+                <a href="{% url 'product_update' product.id %}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-pencil me-1"></i> Editar
+                </a>
+            {% endif %}
+            <a href="{% url 'product_list' %}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Voltar
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title" style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em;">{{ product.name }}</h3>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="detail-info mb-3">
+                        <div class="row mb-2">
+                            <div class="col-4" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Categoria</div>
+                            <div class="col-8">{{ product.category }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Marca</div>
+                            <div class="col-8">{{ product.brand }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Nro. Série</div>
+                            <div class="col-8"><strong>{{ product.serie_number }}</strong></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Quantidade</div>
+                            <div class="col-8"><strong>{{ product.quantity }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-info mb-3">
+                        <div class="row mb-2">
+                            <div class="col-4" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Preço Custo</div>
+                            <div class="col-8" style="color: #f87171;"><strong>R$ {{ product.cost_price }}</strong></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Preço Venda</div>
+                            <div class="col-8" style="color: #34d399;"><strong>R$ {{ product.selling_price }}</strong></div>
+                        </div>
+                        {% if product.description %}
+                            <div class="row">
+                                <div class="col-4" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Descrição</div>
+                                <div class="col-8">{{ product.description }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
-        
-        {% include "components/_detail_info.html" with object=product %}
-        <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">Voltar para a Lista de Produtos</a>
     </div>
+    
+    {% include "components/_detail_info.html" with object=product %}
 {% endblock %}

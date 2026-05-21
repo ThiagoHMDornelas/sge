@@ -1,17 +1,28 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    <div class="container mt-4">
-        <h3 class="display-6">Detalhes da Categoria</h3>
+{% block title %}SGE - Detalhes da Categoria{% endblock %}
 
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">{{ category.name }}</h3>
-                <p class="card-text">{{ category.description }}</p>
-            </div>
+{% block content %}
+    <div class="page-header">
+        <h3><i class="fas fa-layer-group me-2" style="color: var(--sge-violet-light);"></i>Detalhes da Categoria</h3>
+        <div class="d-flex gap-2">
+            {% if perms.category.change_category %}
+                <a href="{% url 'category_update' category.id %}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-pencil me-1"></i> Editar
+                </a>
+            {% endif %}
+            <a href="{% url 'category_list' %}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Voltar
+            </a>
         </div>
-        
-        {% include "components/_detail_info.html" with object=category %}
-        <a href="{% url 'category_list' %}" class="btn btn-secondary mt-3">Voltar para a Lista de Categorias</a>
     </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title" style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em;">{{ category.name }}</h3>
+            <p class="card-text" style="color: var(--sge-text-muted);">{{ category.description }}</p>
+        </div>
+    </div>
+    
+    {% include "components/_detail_info.html" with object=category %}
 {% endblock %}

@@ -8,43 +8,40 @@ SGE - Produtos
 {% block content %}
     {% include 'components/_product_metrics.html' %}
 
-    <div class="mb-4"></div>
-
-    <h3 class="display-6">Cadastro de Produto</h3>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <form method="get" action="{% url 'product_list' %}">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="name" placeholder="Nome" value="{{ request.GET.name }}">
-                    <input type="text" class="form-control" name="serie_number" placeholder="Nro. Série" value="{{ request.GET.serie_number }}">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-search"></i>
-                    </button>
-                    <a href="{% url 'product_list' %}" class="btn btn-secondary">
-                        <i class="bi bi-x-lg"></i>
-                    </a>
-                </div>
-            </form>
-        </div>
-
+    <div class="page-header mt-4">
+        <h3><i class="fas fa-box-seam me-2" style="color: var(--sge-violet-light);"></i>Cadastro de Produtos</h3>
         {% if perms.product.add_product %}
-            <div class="col-md-6">
-                <a href="{% url 'product_create' %}" class="btn btn-success float-end">
-                    <i class="bi bi-plus"></i> Novo Produto
-                </a>
-            </div>
+            <a href="{% url 'product_create' %}" class="btn btn-success">
+                <i class="fas fa-plus me-1"></i> Novo Produto
+            </a>
         {% endif %}
     </div>
 
     <div class="row mb-3">
         <div class="col-md-6">
-            
+            <form method="get" action="{% url 'product_list' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="name" placeholder="Buscar por nome..." value="{{ request.GET.name }}">
+                    <input type="text" class="form-control" name="serie_number" placeholder="Nro. Série" value="{{ request.GET.serie_number }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a href="{% url 'product_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
             <form method="get" action="{% url 'product_list' %}">
                 <div class="input-group">
                     <select class="form-select" name="category">
                         <option value="" {% if not request.GET.category %} selected {% endif %}>Todas as Categorias</option>
-                            {% for category in categories %}
-                        <option value="{{ category.id }}" {% if request.GET.category == category.id %} selected {% endif %}>{{ category.name }}</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if request.GET.category == category.id %} selected {% endif %}>{{ category.name }}</option>
                         {% endfor %}
                     </select>
                     <select class="form-select" name="brand">
@@ -54,91 +51,98 @@ SGE - Produtos
                         {% endfor %}
                     </select>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-filter"></i> Filtrar
+                        <i class="fas fa-filter me-1"></i> Filtrar
                     </button>
                 </div>
             </form>
-
-
-            
-       </div>
+        </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover" style="table-layout: fixed; width: 100%;">
-            <colgroup>
-                <col style="width: 5%;">
-                <col style="width: 35%;">
-                <col style="width: 20%;">
-                <col style="width: 20%;">
-                <col style="width: 10%;">
-                <col style="width: 10%;">
-            </colgroup>
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover mb-0">
+                    <colgroup>
+                        <col style="width: 5%;">
+                        <col style="width: 35%;">
+                        <col style="width: 20%;">
+                        <col style="width: 20%;">
+                        <col style="width: 10%;">
+                        <col style="width: 10%;">
+                    </colgroup>
 
-            <thead>
-                <tr>
-                    <th>
-                        <a href="{% sort_url 'id' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
-                            ID <i class="bi {% sort_icon_class 'id' %}"></i>
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{% sort_url 'name' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
-                            Nome <i class="bi {% sort_icon_class 'name' %}"></i>
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{% sort_url 'category' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
-                            Categoria <i class="bi {% sort_icon_class 'category' %}"></i>
-                        </a>
-                    </th>                    
-                    <th>
-                        <a href="{% sort_url 'brand' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
-                            Marca <i class="bi {% sort_icon_class 'brand' %}"></i>
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{% sort_url 'quantity' %}" class="text-decoration-none text-white" style="white-space: nowrap;">
-                            Quantidade <i class="bi {% sort_icon_class 'quantity' %}"></i>
-                        </a>
-                    </th>                    
-                    <th class="text-center">Ações</th>
-                </tr>
-            </thead>
+                    <thead>
+                        <tr>
+                            <th>
+                                <a href="{% sort_url 'id' %}" class="text-decoration-none" style="white-space: nowrap;">
+                                    ID <i class="bi {% sort_icon_class 'id' %}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{% sort_url 'name' %}" class="text-decoration-none" style="white-space: nowrap;">
+                                    Nome <i class="bi {% sort_icon_class 'name' %}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{% sort_url 'category' %}" class="text-decoration-none" style="white-space: nowrap;">
+                                    Categoria <i class="bi {% sort_icon_class 'category' %}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{% sort_url 'brand' %}" class="text-decoration-none" style="white-space: nowrap;">
+                                    Marca <i class="bi {% sort_icon_class 'brand' %}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{% sort_url 'quantity' %}" class="text-decoration-none" style="white-space: nowrap;">
+                                    Qtd <i class="bi {% sort_icon_class 'quantity' %}"></i>
+                                </a>
+                            </th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
 
-            <tbody>
-                {% for product in products %}
-                    <tr>
-                        <td>{{ product.id }}</td>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.category }}</td>
-                        <td>{{ product.brand }}</td>
-                        <td>{{ product.quantity }}</td>
-                        <td class="text-center">
-                            <div class="d-flex justify-content-center gap-1 flex-wrap"></div>
-                                {% if perms.product.view_product %}
-                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-info btn-sm">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                {% endif %}
+                    <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.category }}</td>
+                                <td>{{ product.brand }}</td>
+                                <td>{{ product.quantity }}</td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        {% if perms.product.view_product %}
+                                            <a href="{% url 'product_detail' product.id %}" class="btn btn-info btn-sm" title="Visualizar">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        {% endif %}
 
-                                {% if perms.product.change_product %}
-                                    <a href="{% url 'product_update' product.id %}" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                {% endif %}
+                                        {% if perms.product.change_product %}
+                                            <a href="{% url 'product_update' product.id %}" class="btn btn-warning btn-sm" title="Editar">
+                                                <i class="fas fa-pencil"></i>
+                                            </a>
+                                        {% endif %}
 
-                                {% if perms.product.delete_product %}
-                                    <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm btn-delete">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                {% endif %}
-                            </div>                                    
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                                        {% if perms.product.delete_product %}
+                                            <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm btn-delete" title="Excluir">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center" style="color: var(--sge-text-dim);">
+                                    <i class="fas fa-inbox me-2"></i>Nenhum produto encontrado.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     {% include "components/_pagination.html" %}
