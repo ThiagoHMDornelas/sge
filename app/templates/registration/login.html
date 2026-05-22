@@ -2,37 +2,37 @@
 
 {% block title %}SGE - Login{% endblock %}
 
-{% block body_class %}login-bg flex items-center justify-center p-4 relative overflow-hidden overflow-x-hidden{% endblock %}
+{% block body_class %}login-body{% endblock %}
 
 {% block header %}{% endblock %}
 
 {% block layout %}
-    <div class="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="login-orbs" aria-hidden="true">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
     </div>
 
-    <div class="w-full max-w-md relative z-10">
-        <div class="glass-card rounded-2xl shadow-2xl overflow-hidden">
-            <div class="px-8 pt-10 pb-2 text-center fade-in-up">
-                <div class="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/25 mb-5">
-                    <i class="fas fa-warehouse text-white text-2xl"></i>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-header fade-in-up">
+                <div class="login-icon">
+                    <i class="fas fa-warehouse"></i>
                 </div>
-                <h1 class="text-2xl font-bold text-white tracking-tight">Gestão de Estoque</h1>
-                <p class="text-gray-400 text-sm mt-1.5">Entre com suas credenciais para acessar o sistema</p>
+                <h1 class="login-title">Gestão de Estoque</h1>
+                <p class="login-subtitle">Entre com suas credenciais para acessar o sistema</p>
             </div>
 
-            <div class="px-8 pt-6 pb-8 fade-in-up-delay">
+            <div class="login-form-area fade-in-up-delay">
                 {% if form.errors %}
-                    <div class="mb-5 rounded-xl bg-red-500/10 border border-red-500/20 p-4">
-                        <div class="flex items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-exclamation-circle text-red-400"></i>
+                    <div class="login-error">
+                        <div class="login-error-inner">
+                            <div class="login-error-icon">
+                                <i class="fas fa-exclamation-circle"></i>
                             </div>
                             <div>
-                                <p class="text-red-300 text-sm font-medium">Credenciais inválidas</p>
-                                <p class="text-red-400/70 text-xs mt-0.5">Verifique seu usuário e senha e tente novamente.</p>
+                                <p class="login-error-title">Credenciais inválidas</p>
+                                <p class="login-error-desc">Verifique seu usuário e senha e tente novamente.</p>
                             </div>
                         </div>
                     </div>
@@ -40,29 +40,29 @@
 
                 {% if next %}
                     {% if user.is_authenticated %}
-                        <div class="mb-5 rounded-xl bg-amber-500/10 border border-amber-500/20 p-4">
-                            <div class="flex items-center gap-3">
-                                <div class="flex-shrink-0">
-                                    <i class="fas fa-lock text-amber-400"></i>
+                        <div class="login-warning">
+                            <div class="login-error-inner">
+                                <div class="login-warning-icon">
+                                    <i class="fas fa-lock"></i>
                                 </div>
                                 <div>
-                                    <p class="text-amber-300 text-sm font-medium">Acesso restrito</p>
-                                    <p class="text-amber-400/70 text-xs mt-0.5">Sua conta não tem permissão para acessar esta página.</p>
+                                    <p class="login-warning-title">Acesso restrito</p>
+                                    <p class="login-warning-desc">Sua conta não tem permissão para acessar esta página.</p>
                                 </div>
                             </div>
                         </div>
                     {% endif %}
                 {% endif %}
 
-                <form method="post" action="{% url 'login' %}" class="space-y-5">
+                <form method="post" action="{% url 'login' %}" class="login-form">
                     {% csrf_token %}
 
-                    <div class="space-y-1.5">
-                        <label for="username" class="text-sm font-medium text-gray-300 flex items-center gap-2">
-                            <i class="fas fa-user text-violet-400 text-xs"></i>
+                    <div class="login-field">
+                        <label for="username" class="login-label">
+                            <i class="fas fa-user login-label-icon"></i>
                             Usuário
                         </label>
-                        <div class="relative">
+                        <div class="login-input-wrapper">
                             <input
                                 type="text"
                                 id="username"
@@ -70,17 +70,17 @@
                                 required
                                 autocomplete="username"
                                 placeholder="Digite seu usuário"
-                                class="input-glow w-full rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 py-3 px-4 pl-4 text-base focus:outline-none focus:border-violet-500/50 transition-all duration-200"
+                                class="login-input"
                             >
                         </div>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label for="password" class="text-sm font-medium text-gray-300 flex items-center gap-2">
-                            <i class="fas fa-lock text-violet-400 text-xs"></i>
+                    <div class="login-field">
+                        <label for="password" class="login-label">
+                            <i class="fas fa-lock login-label-icon"></i>
                             Senha
                         </label>
-                        <div class="relative">
+                        <div class="login-input-wrapper">
                             <input
                                 type="password"
                                 id="password"
@@ -88,30 +88,29 @@
                                 required
                                 autocomplete="current-password"
                                 placeholder="Digite sua senha"
-                                class="input-glow w-full rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 py-3 px-4 pr-11 text-base focus:outline-none focus:border-violet-500/50 transition-all duration-200"
+                                class="login-input login-input-password"
                             >
-                            <button type="button" id="togglePassword" aria-label="Mostrar senha" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
-                                <i class="fas fa-eye text-sm" id="eyeIcon"></i>
+                            <button type="button" id="togglePassword" aria-label="Mostrar senha" class="login-toggle-password">
+                                <i class="fas fa-eye" id="eyeIcon"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div class="pt-1">
-                        <button type="submit" id="submitBtn" class="btn-gradient w-full py-3 rounded-xl text-white font-semibold text-sm tracking-wide shadow-lg shadow-violet-500/20 cursor-pointer flex items-center justify-center gap-2">
+                    <div class="login-submit-wrapper">
+                        <button type="submit" id="submitBtn" class="login-submit-btn">
                             <span id="submitText">Entrar no Sistema</span>
-                            <i class="fas fa-arrow-right text-xs" id="submitIcon"></i>
+                            <i class="fas fa-arrow-right" id="submitIcon"></i>
                         </button>
                     </div>
                 </form>
             </div>
 
-            <div class="px-8 pb-6 fade-in-up-delay-2">
-                <div class="border-t border-white/5 pt-5">
-                    <p class="text-center text-gray-500 text-xs">
-                        <i class="fas fa-shield-halved mr-1"></i>
-                        SGE — Sistema de Gestão de Estoque
-                    </p>
-                </div>
+            <div class="login-footer fade-in-up-delay-2">
+                <div class="login-footer-divider"></div>
+                <p class="login-footer-text">
+                    <i class="fas fa-shield-halved"></i>
+                    SGE — Sistema de Gestão de Estoque
+                </p>
             </div>
         </div>
     </div>
@@ -121,34 +120,264 @@
 
 {% block extra_css %}
 <style>
-    .login-bg {
+    .login-body {
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
     }
 
-    .glass-card {
+    .login-orbs {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 28rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    .login-card {
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 1rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
     }
 
-    .input-glow:focus {
+    .login-header {
+        padding: 2.5rem 2rem 0.5rem;
+        text-align: center;
+    }
+
+    .login-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 0.75rem;
+        background: linear-gradient(135deg, #8b5cf6, #4f46e5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.25rem;
+        box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.25);
+        color: #fff;
+        font-size: 1.5rem;
+    }
+
+    .login-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
+    .login-subtitle {
+        font-size: 0.875rem;
+        color: #9ca3af;
+        margin-top: 0.375rem;
+    }
+
+    .login-form-area {
+        padding: 1.5rem 2rem 2rem;
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .login-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+    }
+
+    .login-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #d1d5db;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .login-label-icon {
+        color: #8b5cf6;
+        font-size: 0.75rem;
+    }
+
+    .login-input-wrapper {
+        position: relative;
+    }
+
+    .login-input {
+        width: 100%;
+        border-radius: 0.75rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    .login-input::placeholder {
+        color: #6b7280;
+    }
+
+    .login-input:focus {
+        border-color: rgba(139, 92, 246, 0.5);
         box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.1);
     }
 
-    .btn-gradient {
+    .login-input-password {
+        padding-right: 2.75rem;
+    }
+
+    .login-toggle-password {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 0;
+        transition: color 0.15s ease;
+        font-size: 0.875rem;
+    }
+
+    .login-toggle-password:hover {
+        color: #d1d5db;
+    }
+
+    .login-submit-wrapper {
+        padding-top: 0.25rem;
+    }
+
+    .login-submit-btn {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 0.75rem;
         background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.875rem;
+        letter-spacing: 0.02em;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.2);
         transition: all 0.3s ease;
     }
 
-    .btn-gradient:hover {
+    .login-submit-btn:hover {
         background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
         transform: translateY(-1px);
         box-shadow: 0 10px 30px rgba(124, 58, 237, 0.35);
     }
 
-    .btn-gradient:active {
+    .login-submit-btn:active {
         transform: translateY(0);
+    }
+
+    .login-submit-btn.loading {
+        opacity: 0.75;
+        pointer-events: none;
+    }
+
+    .login-error {
+        margin-bottom: 1.25rem;
+        border-radius: 0.75rem;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        padding: 1rem;
+    }
+
+    .login-error-inner {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .login-error-icon {
+        flex-shrink: 0;
+        color: #f87171;
+    }
+
+    .login-error-title {
+        color: #fca5a5;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .login-error-desc {
+        color: rgba(248, 113, 113, 0.7);
+        font-size: 0.75rem;
+        margin-top: 0.125rem;
+    }
+
+    .login-warning {
+        margin-bottom: 1.25rem;
+        border-radius: 0.75rem;
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+        padding: 1rem;
+    }
+
+    .login-warning-icon {
+        flex-shrink: 0;
+        color: #fbbf24;
+    }
+
+    .login-warning-title {
+        color: #fcd34d;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .login-warning-desc {
+        color: rgba(251, 191, 36, 0.7);
+        font-size: 0.75rem;
+        margin-top: 0.125rem;
+    }
+
+    .login-footer {
+        padding: 0 2rem 1.5rem;
+    }
+
+    .login-footer-divider {
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 1.25rem;
+    }
+
+    .login-footer-text {
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.75rem;
+        margin: 0;
+    }
+
+    .login-footer-text i {
+        margin-right: 0.25rem;
     }
 
     .orb {
@@ -193,14 +422,8 @@
     }
 
     @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .fade-in-up {
@@ -221,9 +444,13 @@
 
 {% block extra_js %}
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('username').focus();
+    });
+
     document.getElementById('togglePassword').addEventListener('click', function () {
-        const passwordInput = document.getElementById('password');
-        const eyeIcon = document.getElementById('eyeIcon');
+        var passwordInput = document.getElementById('password');
+        var eyeIcon = document.getElementById('eyeIcon');
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
             eyeIcon.classList.remove('fa-eye');
@@ -238,23 +465,14 @@
     });
 
     document.querySelector('form').addEventListener('submit', function () {
-        const btn = document.getElementById('submitBtn');
-        const text = document.getElementById('submitText');
-        const icon = document.getElementById('submitIcon');
+        var btn = document.getElementById('submitBtn');
+        var text = document.getElementById('submitText');
+        var icon = document.getElementById('submitIcon');
         btn.disabled = true;
-        btn.classList.add('opacity-75');
+        btn.classList.add('loading');
         text.textContent = 'Entrando...';
         icon.classList.remove('fa-arrow-right');
         icon.classList.add('fa-spinner', 'fa-spin');
-    });
-
-    document.querySelectorAll('input').forEach(function(input) {
-        input.addEventListener('focus', function() {
-            this.closest('.relative').classList.add('ring-1', 'ring-violet-500/20');
-        });
-        input.addEventListener('blur', function() {
-            this.closest('.relative').classList.remove('ring-1', 'ring-violet-500/20');
-        });
     });
 </script>
 {% endblock %}

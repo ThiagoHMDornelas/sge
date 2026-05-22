@@ -1,8 +1,14 @@
 from django.shortcuts import render
+from django.http import HttpResponseNotFound
+from django.template import loader
 import json
 from django.contrib.auth.decorators import login_required
 
 from . import metrics
+
+
+def custom_404(request, exception=None):
+    return HttpResponseNotFound(loader.get_template('404.html').render({}, request))
 
 
 @login_required(login_url='login')
