@@ -1,67 +1,96 @@
-<nav class="sidebar" id="sidebar">
-    <div class="sidebar-section-title">Principal</div>
-    <ul class="nav flex-column" id="menu">
-        <li>
-            <a href="{% url 'home' %}" class="nav-link{% if request.resolver_match.url_name == 'home' %} active{% endif %}">
-                <i class="bi bi-speedometer2"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
+<aside class="sge-sidebar" id="sgeSidebar">
+    <div class="sge-sidebar-header">
+        <a class="sge-sidebar-brand" href="/">
+            <div class="sge-sidebar-brand-icon">
+                <i class="fas fa-warehouse"></i>
+            </div>
+            <span class="sge-sidebar-brand-text">SGE</span>
+        </a>
+        <button class="sge-sidebar-close-btn" id="sgeSidebarClose" aria-label="Fechar menu">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
 
-        {% if perms.supplier.view_supplier %}
+    <nav class="sge-sidebar-body">
+        <div class="sge-sidebar-section-title">Principal</div>
+        <ul class="sge-sidebar-nav">
             <li>
-                <a href="{% url 'supplier_list' %}" class="nav-link{% if request.resolver_match.url_name == 'supplier_list' %} active{% endif %}">
-                    <i class="bi bi-truck"></i>
-                    <span>Fornecedores</span>
+                <a href="{% url 'home' %}" class="sge-sidebar-link{% if request.resolver_match.url_name == 'home' %} active{% endif %}">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
                 </a>
             </li>
-        {% endif %}
 
-        {% if perms.brands.view_brand %}
-            <li>
-                <a href="{% url 'brand_list' %}" class="nav-link{% if request.resolver_match.url_name == 'brand_list' %} active{% endif %}">
-                    <i class="bi bi-shop"></i>
-                    <span>Marcas</span>
-                </a>
-            </li>
-        {% endif %}
+            {% if perms.supplier.view_supplier %}
+                <li>
+                    <a href="{% url 'supplier_list' %}" class="sge-sidebar-link{% if request.resolver_match.url_name == 'supplier_list' %} active{% endif %}">
+                        <i class="bi bi-truck"></i>
+                        <span>Fornecedores</span>
+                    </a>
+                </li>
+            {% endif %}
 
-        {% if perms.category.view_category %}
-            <li>
-                <a href="{% url 'category_list' %}" class="nav-link{% if request.resolver_match.url_name == 'category_list' %} active{% endif %}">
-                    <i class="bi bi-tags"></i>
-                    <span>Categorias</span>
-                </a>
-            </li>
-        {% endif %}
+            {% if perms.brands.view_brand %}
+                <li>
+                    <a href="{% url 'brand_list' %}" class="sge-sidebar-link{% if request.resolver_match.url_name == 'brand_list' %} active{% endif %}">
+                        <i class="bi bi-shop"></i>
+                        <span>Marcas</span>
+                    </a>
+                </li>
+            {% endif %}
 
-        {% if perms.product.view_product %}
-            <li>
-                <a href="{% url 'product_list' %}" class="nav-link{% if request.resolver_match.url_name == 'product_list' %} active{% endif %}">
-                    <i class="bi bi-box-seam"></i>
-                    <span>Produtos</span>
-                </a>
-            </li>
-        {% endif %}
+            {% if perms.category.view_category %}
+                <li>
+                    <a href="{% url 'category_list' %}" class="sge-sidebar-link{% if request.resolver_match.url_name == 'category_list' %} active{% endif %}">
+                        <i class="bi bi-tags"></i>
+                        <span>Categorias</span>
+                    </a>
+                </li>
+            {% endif %}
 
-        <div class="sidebar-section-title mt-3">{% if perms.inflow.view_inflow or perms.outflow.view_outflow %}Movimenta&ccedil;&atilde;o{% endif %}</div>
+            {% if perms.product.view_product %}
+                <li>
+                    <a href="{% url 'product_list' %}" class="sge-sidebar-link{% if request.resolver_match.url_name == 'product_list' %} active{% endif %}">
+                        <i class="bi bi-box-seam"></i>
+                        <span>Produtos</span>
+                    </a>
+                </li>
+            {% endif %}
 
-        {% if perms.inflow.view_inflow %}
-            <li>
-                <a href="{% url 'inflow_list' %}" class="nav-link{% if request.resolver_match.url_name == 'inflow_list' %} active{% endif %}">
-                    <i class="bi bi-arrow-down-left-square"></i>
-                    <span>Entradas</span>
-                </a>
-            </li>
-        {% endif %}
+            {% if perms.inflow.view_inflow or perms.outflow.view_outflow %}
+                <div class="sge-sidebar-section-title">Movimenta&ccedil;&atilde;o</div>
+            {% endif %}
 
-        {% if perms.outflow.view_outflow %}
-            <li>
-                <a href="{% url 'outflow_list' %}" class="nav-link{% if request.resolver_match.url_name == 'outflow_list' %} active{% endif %}">
-                    <i class="bi bi-arrow-up-right-square"></i>
-                    <span>Sa&iacute;das</span>
-                </a>
-            </li>
-        {% endif %}
-    </ul>
-</nav>
+            {% if perms.inflow.view_inflow %}
+                <li>
+                    <a href="{% url 'inflow_list' %}" class="sge-sidebar-link{% if request.resolver_match.url_name == 'inflow_list' %} active{% endif %}">
+                        <i class="bi bi-arrow-down-left-square"></i>
+                        <span>Entradas</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if perms.outflow.view_outflow %}
+                <li>
+                    <a href="{% url 'outflow_list' %}" class="sge-sidebar-link{% if request.resolver_match.url_name == 'outflow_list' %} active{% endif %}">
+                        <i class="bi bi-arrow-up-right-square"></i>
+                        <span>Sa&iacute;das</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="sge-sidebar-footer">
+        <div class="sge-sidebar-user">
+            <div class="sge-sidebar-user-avatar">
+                {{ request.user.first_name|default:request.user.username|slice:":1" }}
+            </div>
+            <div class="sge-sidebar-user-info">
+                <span class="sge-sidebar-user-name">{{ request.user.get_full_name|default:request.user.username }}</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<div class="sge-sidebar-overlay" id="sgeSidebarOverlay"></div>
