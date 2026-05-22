@@ -3,19 +3,21 @@
 
 {% block title %}
 SGE - Marcas
-{% endblock%}
+{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h3><i class="fas fa-tags me-2" style="color: var(--sge-violet-light);"></i>Cadastro de Marcas</h3>
+    <div class="page-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--sge-border);">
+        <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em;">
+            <i class="fas fa-tags me-2" style="color: var(--sge-violet-light);"></i>Marcas
+        </h3>
         {% if perms.brands.add_brand %}
-            <a href="{% url 'brand_create' %}" class="btn btn-success">
+            <a href="{% url 'brand_create' %}" class="btn btn-success" style="font-size: 0.85rem;">
                 <i class="fas fa-plus me-1"></i> Nova Marca
             </a>
         {% endif %}
     </div>
 
-    <div class="row mb-4">
+    <div class="row mb-3">
         <div class="col-md-6">
             <form method="get" action="{% url 'brand_list' %}">
                 <div class="input-group">
@@ -31,79 +33,71 @@ SGE - Marcas
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover mb-0">
-                    <colgroup>
-                        <col style="width: 5%;">
-                        <col style="width: 25%;">
-                        <col style="width: 60%;">
-                        <col style="width: 10%;">
-                    </colgroup>
-
-                    <thead>
-                        <tr>
-                            <th>
-                                <a href="{% sort_url 'id' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    ID <i class="bi {% sort_icon_class 'id' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'name' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Nome <i class="bi {% sort_icon_class 'name' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'description' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Descrição <i class="bi {% sort_icon_class 'description' %}"></i>
-                                </a>
-                            </th>
-                            <th class="text-center">Ações</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for brand in brands %}
-                            <tr>
-                                <td>{{ brand.id }}</td>
-                                <td>{{ brand.name }}</td>
-                                <td>{{ brand.description }}</td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-1">
-                                        {% if perms.brands.view_brand %}
-                                            <a href="{% url 'brand_detail' brand.id %}" class="btn btn-info btn-sm" title="Visualizar">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        {% endif %}
-
-                                        {% if perms.brands.change_brand %}
-                                            <a href="{% url 'brand_update' brand.id %}" class="btn btn-warning btn-sm" title="Editar">
-                                                <i class="fas fa-pencil"></i>
-                                            </a>
-                                        {% endif %}
-
-                                        {% if perms.brands.delete_brand %}
-                                            <a href="{% url 'brand_delete' brand.id %}" class="btn btn-danger btn-sm btn-delete" title="Excluir">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="4" class="text-center" style="color: var(--sge-text-dim);">
-                                    <i class="fas fa-inbox me-2"></i>Nenhuma marca encontrada.
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="sge-list-card">
+        <table class="sge-table">
+            <colgroup>
+                <col style="width: 5%;">
+                <col style="width: 25%;">
+                <col style="width: 60%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th class="col-id">
+                        <a href="{% sort_url 'id' %}" style="white-space: nowrap;">
+                            ID <i class="bi {% sort_icon_class 'id' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'name' %}" style="white-space: nowrap;">
+                            Nome <i class="bi {% sort_icon_class 'name' %}"></i>
+                        </a>
+                    </th>
+                    <th class="col-desc">
+                        <a href="{% sort_url 'description' %}" style="white-space: nowrap;">
+                            Descrição <i class="bi {% sort_icon_class 'description' %}"></i>
+                        </a>
+                    </th>
+                    <th style="text-align: center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for brand in brands %}
+                    <tr>
+                        <td class="col-id">{{ brand.id }}</td>
+                        <td class="col-name">{{ brand.name }}</td>
+                        <td class="col-desc">{{ brand.description }}</td>
+                        <td>
+                            <div class="sge-actions">
+                                {% if perms.brands.view_brand %}
+                                    <a href="{% url 'brand_detail' brand.id %}" class="act-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                {% endif %}
+                                {% if perms.brands.change_brand %}
+                                    <a href="{% url 'brand_update' brand.id %}" class="act-edit" title="Editar">
+                                        <i class="fas fa-pencil"></i>
+                                    </a>
+                                {% endif %}
+                                {% if perms.brands.delete_brand %}
+                                    <a href="{% url 'brand_delete' brand.id %}" class="act-del" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr class="sge-empty-row">
+                        <td colspan="4">
+                            <i class="fas fa-inbox" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; color: #4b5563;"></i>
+                            Nenhuma marca encontrada.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     {% include "components/_pagination.html" %}
-
 {% endblock %}

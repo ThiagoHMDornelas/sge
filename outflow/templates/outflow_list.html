@@ -3,21 +3,23 @@
 
 {% block title %}
 SGE - Saídas
-{% endblock%}
+{% endblock %}
 
 {% block content %}
     {% include 'components/_sales_metrics.html' %}
 
-    <div class="page-header mt-4">
-        <h3><i class="fas fa-arrow-up me-2" style="color: #f59e0b;"></i>Registro de Saídas</h3>
+    <div class="page-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--sge-border);">
+        <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em;">
+            <i class="fas fa-arrow-up me-2" style="color: #f59e0b;"></i>Saídas
+        </h3>
         {% if perms.outflow.add_outflow %}
-            <a href="{% url 'outflow_create' %}" class="btn btn-success">
+            <a href="{% url 'outflow_create' %}" class="btn btn-success" style="font-size: 0.85rem;">
                 <i class="fas fa-plus me-1"></i> Registrar Saída
             </a>
         {% endif %}
     </div>
 
-    <div class="row mb-4">
+    <div class="row mb-3">
         <div class="col-md-6">
             <form method="get" action="{% url 'outflow_list' %}">
                 <div class="input-group">
@@ -33,74 +35,68 @@ SGE - Saídas
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover mb-0">
-                    <colgroup>
-                        <col style="width: 15%;">
-                        <col style="width: 5%;">
-                        <col style="width: 65%;">
-                        <col style="width: 10%;">
-                        <col style="width: 5%;">
-                    </colgroup>
-
-                    <thead>
-                        <tr>
-                            <th>
-                                <a href="{% sort_url 'created_at' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Data Saída <i class="bi {% sort_icon_class 'created_at' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'id' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    ID <i class="bi {% sort_icon_class 'id' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'product' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Produto <i class="bi {% sort_icon_class 'product' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'quantity' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Qtd <i class="bi {% sort_icon_class 'quantity' %}"></i>
-                                </a>
-                            </th>
-                            <th class="text-center">Ações</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for outflow in outflows %}
-                            <tr>
-                                <td>{{ outflow.created_at|date:"d/m/Y H:i:s" }}</td>
-                                <td>{{ outflow.id }}</td>
-                                <td>{{ outflow.product }}</td>
-                                <td>{{ outflow.quantity }}</td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-1">
-                                        {% if perms.outflow.view_outflow %}
-                                            <a href="{% url 'outflow_detail' outflow.id %}" class="btn btn-info btn-sm" title="Visualizar">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="5" class="text-center" style="color: var(--sge-text-dim);">
-                                    <i class="fas fa-inbox me-2"></i>Nenhuma saída registrada.
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="sge-list-card">
+        <table class="sge-table">
+            <colgroup>
+                <col style="width: 25%;">
+                <col style="width: 5%;">
+                <col style="width: 45%;">
+                <col style="width: 10%;">
+                <col style="width: 15%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        <a href="{% sort_url 'created_at' %}" style="white-space: nowrap;">
+                            Data Saída <i class="bi {% sort_icon_class 'created_at' %}"></i>
+                        </a>
+                    </th>
+                    <th class="col-id">
+                        <a href="{% sort_url 'id' %}" style="white-space: nowrap;">
+                            ID <i class="bi {% sort_icon_class 'id' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'product' %}" style="white-space: nowrap;">
+                            Produto <i class="bi {% sort_icon_class 'product' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'quantity' %}" style="white-space: nowrap;">
+                            Qtd <i class="bi {% sort_icon_class 'quantity' %}"></i>
+                        </a>
+                    </th>
+                    <th style="text-align: center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for outflow in outflows %}
+                    <tr>
+                        <td>{{ outflow.created_at|date:"d/m/Y H:i:s" }}</td>
+                        <td class="col-id">{{ outflow.id }}</td>
+                        <td class="col-name">{{ outflow.product }}</td>
+                        <td>{{ outflow.quantity }}</td>
+                        <td>
+                            <div class="sge-actions">
+                                {% if perms.outflow.view_outflow %}
+                                    <a href="{% url 'outflow_detail' outflow.id %}" class="act-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr class="sge-empty-row">
+                        <td colspan="5">
+                            <i class="fas fa-inbox" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; color: #4b5563;"></i>
+                            Nenhuma saída registrada.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     {% include "components/_pagination.html" %}
-
 {% endblock %}

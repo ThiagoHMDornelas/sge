@@ -8,10 +8,12 @@ SGE - Produtos
 {% block content %}
     {% include 'components/_product_metrics.html' %}
 
-    <div class="page-header mt-4">
-        <h3><i class="fas fa-box-seam me-2" style="color: var(--sge-violet-light);"></i>Cadastro de Produtos</h3>
+    <div class="page-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--sge-border);">
+        <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em;">
+            <i class="fas fa-box-seam me-2" style="color: var(--sge-violet-light);"></i>Produtos
+        </h3>
         {% if perms.product.add_product %}
-            <a href="{% url 'product_create' %}" class="btn btn-success">
+            <a href="{% url 'product_create' %}" class="btn btn-success" style="font-size: 0.85rem;">
                 <i class="fas fa-plus me-1"></i> Novo Produto
             </a>
         {% endif %}
@@ -58,93 +60,85 @@ SGE - Produtos
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover mb-0">
-                    <colgroup>
-                        <col style="width: 5%;">
-                        <col style="width: 35%;">
-                        <col style="width: 20%;">
-                        <col style="width: 20%;">
-                        <col style="width: 10%;">
-                        <col style="width: 10%;">
-                    </colgroup>
-
-                    <thead>
-                        <tr>
-                            <th>
-                                <a href="{% sort_url 'id' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    ID <i class="bi {% sort_icon_class 'id' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'name' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Nome <i class="bi {% sort_icon_class 'name' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'category' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Categoria <i class="bi {% sort_icon_class 'category' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'brand' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Marca <i class="bi {% sort_icon_class 'brand' %}"></i>
-                                </a>
-                            </th>
-                            <th>
-                                <a href="{% sort_url 'quantity' %}" class="text-decoration-none" style="white-space: nowrap;">
-                                    Qtd <i class="bi {% sort_icon_class 'quantity' %}"></i>
-                                </a>
-                            </th>
-                            <th class="text-center">Ações</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for product in products %}
-                            <tr>
-                                <td>{{ product.id }}</td>
-                                <td>{{ product.name }}</td>
-                                <td>{{ product.category }}</td>
-                                <td>{{ product.brand }}</td>
-                                <td>{{ product.quantity }}</td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-1">
-                                        {% if perms.product.view_product %}
-                                            <a href="{% url 'product_detail' product.id %}" class="btn btn-info btn-sm" title="Visualizar">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        {% endif %}
-
-                                        {% if perms.product.change_product %}
-                                            <a href="{% url 'product_update' product.id %}" class="btn btn-warning btn-sm" title="Editar">
-                                                <i class="fas fa-pencil"></i>
-                                            </a>
-                                        {% endif %}
-
-                                        {% if perms.product.delete_product %}
-                                            <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm btn-delete" title="Excluir">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="6" class="text-center" style="color: var(--sge-text-dim);">
-                                    <i class="fas fa-inbox me-2"></i>Nenhum produto encontrado.
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="sge-list-card">
+        <table class="sge-table">
+            <colgroup>
+                <col style="width: 5%;">
+                <col style="width: 30%;">
+                <col style="width: 20%;">
+                <col style="width: 20%;">
+                <col style="width: 10%;">
+                <col style="width: 15%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th class="col-id">
+                        <a href="{% sort_url 'id' %}" style="white-space: nowrap;">
+                            ID <i class="bi {% sort_icon_class 'id' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'name' %}" style="white-space: nowrap;">
+                            Nome <i class="bi {% sort_icon_class 'name' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'category' %}" style="white-space: nowrap;">
+                            Categoria <i class="bi {% sort_icon_class 'category' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'brand' %}" style="white-space: nowrap;">
+                            Marca <i class="bi {% sort_icon_class 'brand' %}"></i>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{% sort_url 'quantity' %}" style="white-space: nowrap;">
+                            Qtd <i class="bi {% sort_icon_class 'quantity' %}"></i>
+                        </a>
+                    </th>
+                    <th style="text-align: center;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td class="col-id">{{ product.id }}</td>
+                        <td class="col-name">{{ product.name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.brand }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>
+                            <div class="sge-actions">
+                                {% if perms.product.view_product %}
+                                    <a href="{% url 'product_detail' product.id %}" class="act-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                {% endif %}
+                                {% if perms.product.change_product %}
+                                    <a href="{% url 'product_update' product.id %}" class="act-edit" title="Editar">
+                                        <i class="fas fa-pencil"></i>
+                                    </a>
+                                {% endif %}
+                                {% if perms.product.delete_product %}
+                                    <a href="{% url 'product_delete' product.id %}" class="act-del" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr class="sge-empty-row">
+                        <td colspan="6">
+                            <i class="fas fa-inbox" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; color: #4b5563;"></i>
+                            Nenhum produto encontrado.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     {% include "components/_pagination.html" %}
-
 {% endblock %}
