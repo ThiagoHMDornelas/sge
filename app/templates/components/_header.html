@@ -29,7 +29,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                         {% if user.is_authenticated %}
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{% url 'profile' %}">
                                     <i class="bi bi-person-circle me-2"></i> Perfil
                                 </a>
                             </li>

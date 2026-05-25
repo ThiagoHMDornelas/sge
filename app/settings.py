@@ -182,6 +182,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 DETAIL_LAYOUT = "fine"  # opções: minimal, table, cards, fine, badges
 
 REST_FRAMEWORK = {

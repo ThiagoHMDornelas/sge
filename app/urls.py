@@ -6,6 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from . import views
+from authentication.views import profile
 
 handler404 = views.custom_404
 
@@ -16,6 +17,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('password/change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
     path('password/change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('profile/', profile, name='profile'),
 
     path('api/v1/', include('authentication.urls')),
 
@@ -27,6 +29,9 @@ urlpatterns = [
     path('', include('inflow.urls')),
     path('', include('outflow.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if not settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

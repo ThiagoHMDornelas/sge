@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}SGE - Meu Perfil{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="page-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--sge-border);">
+                <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em;">
+                    <i class="fas fa-user-circle me-2" style="color: var(--sge-violet-light);"></i>Meu Perfil
+                </h3>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="text-center mb-4">
+                            <div class="profile-avatar-wrapper">
+                                {% if request.user.profile.avatar and request.user.profile.avatar.url %}
+                                    <img src="{{ request.user.profile.avatar.url }}" alt="Avatar" class="profile-avatar-img">
+                                {% else %}
+                                    <div class="profile-avatar-placeholder">
+                                        {{ request.user.first_name|default:request.user.username|slice:":1" }}
+                                    </div>
+                                {% endif %}
+                                <label for="id_avatar" class="profile-avatar-edit" title="Alterar foto">
+                                    <i class="fas fa-camera"></i>
+                                </label>
+                            </div>
+                            {{ form.avatar }}
+                        </div>
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle me-2"></i>Por favor, corrija os erros abaixo.
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="id_first_name" class="form-label">
+                                <i class="fas fa-user me-1" style="color: var(--sge-violet-light); font-size: 0.8rem;"></i> Nome
+                            </label>
+                            {{ form.first_name }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">
+                                <i class="fas fa-envelope me-1" style="color: var(--sge-violet-light); font-size: 0.8rem;"></i> E-mail
+                            </label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Salvar Alterações
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Voltar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-avatar-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-avatar-img {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(139, 92, 246, 0.3);
+        box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+    }
+
+    .profile-avatar-placeholder {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.5rem;
+        font-weight: 700;
+        border: 3px solid rgba(139, 92, 246, 0.3);
+        box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+    }
+
+    .profile-avatar-edit {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        cursor: pointer;
+        border: 2px solid rgba(15, 12, 41, 0.97);
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-avatar-edit:hover {
+        transform: scale(1.1);
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    #id_avatar {
+        display: none;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--sge-text);
+    }
+
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        color: var(--sge-text);
+    }
+
+    .form-label {
+        color: var(--sge-text-secondary);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('id_avatar').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                var img = document.querySelector('.profile-avatar-img');
+                var placeholder = document.querySelector('.profile-avatar-placeholder');
+                if (img) {
+                    img.src = ev.target.result;
+                } else if (placeholder) {
+                    var newImg = document.createElement('img');
+                    newImg.src = ev.target.result;
+                    newImg.alt = 'Avatar';
+                    newImg.className = 'profile-avatar-img';
+                    placeholder.parentNode.replaceChild(newImg, placeholder);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}
