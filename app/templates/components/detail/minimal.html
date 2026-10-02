@@ -3,7 +3,7 @@
         <div class="col-3" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Criado em</div>
         <div class="col">
             {{ object.created_at|date:"d/m/Y H:i" }}
-            <span style="color: var(--sge-text-dim); margin-left: 0.5rem; font-size: 0.8rem;">({{ object.user_created.get_full_name|default:object.user_created.username|default:"N&atilde;o informado" }})</span>
+            <span style="color: var(--sge-text-dim); margin-left: 0.5rem; font-size: 0.8rem;">({{ object.user_created_display }})</span>
         </div>
     </div>
 
@@ -11,7 +11,7 @@
         <div class="col-3" style="color: var(--sge-text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em;">Atualizado em</div>
         <div class="col">
             {{ object.updated_at|date:"d/m/Y H:i" }}
-            <span style="color: var(--sge-text-dim); margin-left: 0.5rem; font-size: 0.8rem;">({{ object.user_updated.get_full_name|default:object.user_updated.username|default:"N&atilde;o informado" }})</span>
+            <span style="color: var(--sge-text-dim); margin-left: 0.5rem; font-size: 0.8rem;">({{ object.user_updated_display }})</span>
         </div>
     </div>
 </div>

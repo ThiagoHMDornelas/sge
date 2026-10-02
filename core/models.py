@@ -45,3 +45,17 @@ class BaseModel(models.Model):
             self.user_updated = user
 
         super().save(*args, **kwargs)
+
+    @property
+    def user_created_display(self):
+        return self._user_display(self.user_created)
+
+    @property
+    def user_updated_display(self):
+        return self._user_display(self.user_updated)
+
+    @staticmethod
+    def _user_display(user):
+        if user is None:
+            return 'Não informado'
+        return user.get_full_name() or user.username

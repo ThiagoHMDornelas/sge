@@ -1,7 +1,7 @@
 # Sistema de Gestão de Estoque (SGE)
 
 ![Testes](https://github.com/ThiagoHMDornelas/sge/actions/workflows/tests.yml/badge.svg)
-![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)
 ![Django](https://img.shields.io/badge/django-5.0-092E20)
 ![DRF](https://img.shields.io/badge/DRF-3.16-red)
 
@@ -21,6 +21,7 @@ Sistema de gestão de estoque desenvolvido com Django e Django REST Framework. C
 - [Testes](#testes)
 - [Principais rotas](#principais-rotas)
 - [Painel administrativo](#painel-administrativo)
+- [Licença](#licença)
 
 ## Visão geral
 
@@ -42,7 +43,8 @@ O **SGE** é um sistema web e de API para gerenciamento de estoque. Usuários au
 - Python
 - Django 5.0
 - Django REST Framework + SimpleJWT
-- python-dotenv (variáveis de ambiente)
+- drf-spectacular (documentação da API)
+- python-decouple (variáveis de ambiente)
 - SQLite e PostgreSQL (via psycopg2)
 - Bootstrap 5
 - Docker e Docker Compose
@@ -76,7 +78,7 @@ sge/
 
 Pré-requisitos:
 
-- Python 3.11 ou superior instalado
+- Python 3.11 ou 3.12 instalado
 
 Crie um ambiente virtual:
 
@@ -132,6 +134,11 @@ Copie o `.env.example` para `.env` e ajuste os valores:
     SESSION_COOKIE_NAME=sge_sessionid
     CSRF_COOKIE_NAME=sge_csrf
 
+    # Superusuário (usado com createsuperuser --noinput)
+    DJANGO_SUPERUSER_USERNAME=
+    DJANGO_SUPERUSER_EMAIL=
+    DJANGO_SUPERUSER_PASSWORD=
+
     # Banco de dados (veja a seção "Banco de dados")
     DB_ENV=dev
     ACTIVE_DB=sqlite
@@ -170,7 +177,7 @@ Para parar e remover os containers:
 
 ## API REST
 
-A API é autenticada por **JWT** (`djangorestframework-simplejwt`) e as permissões são verificadas por método HTTP (`view`, `add`, `change`, `delete`).
+A API é autenticada por **JWT** (`djangorestframework-simplejwt`) e as permissões são verificadas por método HTTP (`view`, `add`, `change`, `delete`). A documentação interativa (Swagger/OpenAPI) está disponível em `/api/docs/` (schema em `/api/schema/`).
 
 Obter o token:
 
@@ -198,7 +205,7 @@ A suíte cobre modelos, formulários, views, *signals* de estoque e endpoints da
 
     python manage.py test
 
-A suíte também roda automaticamente a cada `push` e `pull request` via **GitHub Actions** (`.github/workflows/tests.yml`), e o resultado é exibido no badge no topo deste README.
+A suíte também roda automaticamente a cada `push` e `pull request` via **GitHub Actions** (`.github/workflows/tests.yml`) — em **SQLite** e também em **PostgreSQL** — e o resultado é exibido no badge no topo deste README.
 
 ## Principais rotas
 
@@ -211,6 +218,7 @@ A suíte também roda automaticamente a cada `push` e `pull request` via **GitHu
 | `/brands/`, `/categories/`, `/suppliers/` | CRUDs (list/create/detail/update/delete) |
 | `/inflows/`, `/outflows/` | Entradas e saídas de estoque |
 | `/api/v1/...` | API REST |
+| `/api/docs/` | Documentação interativa da API (Swagger) |
 | `/admin/` | Painel administrativo |
 
 ## Painel administrativo

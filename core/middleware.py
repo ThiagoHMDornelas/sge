@@ -9,7 +9,10 @@ class CurrentUserMiddleware:
 
     def __call__(self, request):
         _user.value = getattr(request, 'user', None)
-        return self.get_response(request)
+        try:
+            return self.get_response(request)
+        finally:
+            _user.value = None
 
 
 def get_current_user():

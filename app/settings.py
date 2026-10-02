@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
 
     'authentication',
     'core',
@@ -193,19 +194,16 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.DjangoModelPermissions',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
-    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    # "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 
-OPENAI_MODEL = config('OPENAI_MODEL', default='')
-GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
-
-OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
-
-MISTRAL_API_KEY = config('MISTRAL_API_KEY', default='')
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SGE API',
+    'DESCRIPTION': 'API REST do Sistema de Gestão de Estoque (produtos, marcas, categorias, fornecedores, entradas e saídas).',
+    'VERSION': '1.0.0',
+}

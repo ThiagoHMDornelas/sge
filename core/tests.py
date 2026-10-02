@@ -17,14 +17,21 @@ class CurrentUserMiddlewareTest(TestCase):
     def test_get_current_user_returns_none_without_request(self):
         self.assertIsNone(get_current_user())
 
-    def test_middleware_stores_request_user(self):
+    def test_middleware_stores_request_user_during_request(self):
         user = User.objects.create_user(username='ana', password='senha123')
         request = RequestFactory().get('/')
         request.user = user
 
-        CurrentUserMiddleware(lambda req: req)(request)
+        captured = {}
 
-        self.assertEqual(get_current_user(), user)
+        def get_response(req):
+            captured['user'] = get_current_user()
+            return req
+
+        CurrentUserMiddleware(get_response)(request)
+
+        self.assertEqual(captured['user'], user)
+        self.assertIsNone(get_current_user())
 
 
 class BaseModelAuditTest(TestCase):
@@ -38,12 +45,16 @@ class BaseModelAuditTest(TestCase):
         user = User.objects.create_user(username='auditor', password='senha123')
         request = RequestFactory().get('/')
         request.user = user
-        CurrentUserMiddleware(lambda req: req)(request)
+        created = {}
 
-        brand = Brand.objects.create(name='Toyota')
+        def get_response(req):
+            created['brand'] = Brand.objects.create(name='Toyota')
+            return req
 
-        self.assertEqual(brand.user_created, user)
-        self.assertEqual(brand.user_updated, user)
+        CurrentUserMiddleware(get_response)(request)
+
+        self.assertEqual(created['brand'].user_created, user)
+        self.assertEqual(created['brand'].user_updated, user)
 
     def test_audit_fields_stay_empty_without_user(self):
         brand = Brand.objects.create(name='Fiat')

@@ -1,95 +1,97 @@
-from django.utils.formats import number_format
-from django.db.models import Sum, F
+from django.db.models import Count, F, Sum
+from django.db.models.functions import Lower, TruncDate
 from django.utils import timezone
+from django.utils.formats import number_format
 
-from product.models import Product
-from outflow.models import OutFlow
-from category.models import Category
 from brands.models import Brand
+from category.models import Category
+from outflow.models import OutFlow
+from product.models import Product
 
 
 def get_sales_metrics():
-    total_sales = OutFlow.objects.count()
-    total_product_sold = OutFlow.objects.aggregate(
-        total_product_sold=Sum('quantity')
-    )['total_product_sold'] or 0
-
-    total_sales_cost = 0
-    total_sales_value = 0
-    for outflows in OutFlow.objects.all():
-        total_sales_cost += outflows.product.cost_price * outflows.quantity
-        total_sales_value += outflows.product.selling_price * outflows.quantity
-
-    total_sales_profit = total_sales_value - total_sales_cost
+    totals = OutFlow.objects.aggregate(
+        total_sales=Count('id'),
+        total_product_sold=Sum('quantity'),
+        total_sales_value=Sum(F('product__selling_price') * F('quantity')),
+        total_sales_cost=Sum(F('product__cost_price') * F('quantity')),
+    )
+    value = totals['total_sales_value'] or 0
+    cost = totals['total_sales_cost'] or 0
 
     return dict(
-        total_sales=total_sales,
-        total_product_sold=total_product_sold,
-        total_sales_value=number_format(total_sales_value, decimal_pos=2, force_grouping=True),
-        total_sales_profit=number_format(total_sales_profit, decimal_pos=2, force_grouping=True),
+        total_sales=totals['total_sales'] or 0,
+        total_product_sold=totals['total_product_sold'] or 0,
+        total_sales_value=number_format(value, decimal_pos=2, force_grouping=True),
+        total_sales_profit=number_format(value - cost, decimal_pos=2, force_grouping=True),
     )
 
 
 def get_product_metrics():
-    products = Product.objects.all()
-    total_quantity = 0
-    total_cost_price = 0
-    total_selling_price = 0
-    total_profit = 0
-    for product in products:
-        total_quantity += product.quantity
-        total_cost_price += product.cost_price * product.quantity
-        total_selling_price += product.selling_price * product.quantity
-
-    total_profit = total_selling_price - total_cost_price
+    totals = Product.objects.aggregate(
+        total_quantity=Sum('quantity'),
+        total_cost_price=Sum(F('cost_price') * F('quantity')),
+        total_selling_price=Sum(F('selling_price') * F('quantity')),
+    )
+    cost = totals['total_cost_price'] or 0
+    selling = totals['total_selling_price'] or 0
 
     return dict(
-        total_quantity=total_quantity,
-        total_cost_price=number_format(total_cost_price, decimal_pos=2, force_grouping=True),
-        total_selling_price=number_format(total_selling_price, decimal_pos=2, force_grouping=True),
-        total_profit=number_format(total_profit, decimal_pos=2, force_grouping=True)
+        total_quantity=totals['total_quantity'] or 0,
+        total_cost_price=number_format(cost, decimal_pos=2, force_grouping=True),
+        total_selling_price=number_format(selling, decimal_pos=2, force_grouping=True),
+        total_profit=number_format(selling - cost, decimal_pos=2, force_grouping=True),
     )
 
 
-def get_daily_sales_data():
+def _daily_series(expression):
     today = timezone.now().date()
-    dates = [str(today - timezone.timedelta(days=i)) for i in range(6, -1, -1)]
-    values = list()
+    start = today - timezone.timedelta(days=6)
 
-    for date in dates:  # SGE - 049
-        sales_total = OutFlow.objects.filter(
-            created_at__date=date
-        ).aggregate(
-            total_sales=Sum(F('product__selling_price') * F('quantity'))
-        )['total_sales'] or 0
-        values.append(float(sales_total))
+    rows = (
+        OutFlow.objects
+        .filter(created_at__date__gte=start)
+        .annotate(day=TruncDate('created_at'))
+        .values('day')
+        .annotate(total=expression)
+    )
+    totals = {row['day']: row['total'] for row in rows}
 
+    dates = [start + timezone.timedelta(days=i) for i in range(7)]
+    return dates, totals
+
+
+def get_daily_sales_data():
+    dates, totals = _daily_series(Sum(F('product__selling_price') * F('quantity')))
     return dict(
-        dates=dates,
-        values=values,
+        dates=[str(date) for date in dates],
+        values=[float(totals.get(date) or 0) for date in dates],
     )
 
 
 def get_daily_sales_quantity_data():
-    today = timezone.now().date()
-    dates = [str(today - timezone.timedelta(days=i)) for i in range(6, -1, -1)]
-    quantities = list()
-
-    for date in dates:
-        sales_quantity = OutFlow.objects.filter(created_at__date=date).count()
-        quantities.append(sales_quantity)
-
+    dates, totals = _daily_series(Count('id'))
     return dict(
-        dates=dates,
-        values=quantities,
+        dates=[str(date) for date in dates],
+        values=[totals.get(date) or 0 for date in dates],
     )
 
 
 def get_graphic_product_category_metric():
-    categories = Category.objects.all()
-    return {category.name: Product.objects.filter(category=category).count() for category in categories}
+    rows = (
+        Category.objects
+        .annotate(total=Count('product_category'))
+        .order_by(Lower('name'))
+        .values_list('name', 'total')
+    )
+    return dict(rows)
 
 
 def get_graphic_product_brand_metric():
-    brands = Brand.objects.all()
-    return {brand.name: Product.objects.filter(brand=brand).count() for brand in brands}
+    rows = (
+        Brand.objects
+        .annotate(total=Count('product_brand'))
+        .order_by(Lower('name'))
+        .values_list('name', 'total')
+    )
+    return dict(rows)
