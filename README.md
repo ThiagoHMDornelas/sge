@@ -167,9 +167,9 @@ Serviços:
 - `sge_web` → aplicação Django em `http://localhost:8000/`
 - `sge_db` → PostgreSQL 17 (dados persistidos em volume)
 
-As migrações são aplicadas automaticamente na inicialização. Para criar um superusuário no container:
+As migrações são aplicadas automaticamente na inicialização. O superusuário é criado manualmente com `createsuperuser --noinput`, usando as variáveis `DJANGO_SUPERUSER_*` do `.env`:
 
-    docker compose exec sge_web python manage.py createsuperuser
+    docker compose exec sge_web python manage.py createsuperuser --noinput
 
 Para parar e remover os containers:
 
