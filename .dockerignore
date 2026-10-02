@@ -1,5 +1,22 @@
+# Ambiente virtual / Git / caches
 .venv
+venv
+env
 .git
 .gitignore
-venv
+.github
 __pycache__
+*.py[cod]
+
+# Banco de dados local
+db.sqlite3
+db.sqlite3-journal
+
+# Arquivos gerados / locais
+staticfiles
+media
+documentação.txt
+*.log
+
+# Variáveis de ambiente (injetadas via env_file no docker-compose)
+.env

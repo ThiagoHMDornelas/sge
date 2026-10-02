@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from core.models import BaseModel
 
@@ -10,7 +11,7 @@ class OutFlow(BaseModel):
         on_delete=models.PROTECT,
         related_name="outflow_product"
     )
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])
     description = models.TextField(null=True, blank=True)
 
     class Meta:

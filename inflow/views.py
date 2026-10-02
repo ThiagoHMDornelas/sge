@@ -33,12 +33,12 @@ class InflowListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         order_mapping = {
             'id': 'id',
             '-id': '-id',
-            'product': Lower('product'),
-            '-product': Lower('product').desc(),
-            'supplier': Lower('supplier'),
-            '-supplier': Lower('supplier').desc(),
-            'quantity': Lower('quantity'),
-            '-quantity': Lower('quantity').desc(),
+            'product': Lower('product__name'),
+            '-product': Lower('product__name').desc(),
+            'supplier': Lower('supplier__name'),
+            '-supplier': Lower('supplier__name').desc(),
+            'quantity': 'quantity',
+            '-quantity': '-quantity',
             'created_at': 'created_at',
             '-created_at': '-created_at',
         }

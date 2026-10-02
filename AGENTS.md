@@ -3,17 +3,16 @@
 Django 5 + DRF + SimpleJWT. Locale pt-br.
 
 ## Comandos
-<!-- Os comandos exatos para rodar o projeto. O ponto-chave é que
-não existe suite de testes, então não tente rodar pytest ou manage.py test. -->
 
 ```bash
 python manage.py migrate          # aplicar migrações
 python manage.py runserver        # servidor de desenvolvimento :8000
+python manage.py test             # suite de testes
 flake8                            # lint (ignora E501, exclui .venv)
 pip install -r requirements_dev.txt  # deps de dev (flake8)
 ```
 
-Ainda não existe suite de testes.
+A suíte de testes roda automaticamente no CI (GitHub Actions) a cada push/PR em `main` (`.github/workflows/tests.yml`).
 
 ## Arquitetura
 <!-- Arquitetura — Três pegadinhas principais:
@@ -28,7 +27,7 @@ Ainda não existe suite de testes.
 - **Módulo de settings**: `app.settings` (não é o padrão Django `sge.settings`)
 - **Modelo base**: `core.models.BaseModel` — todos os models de negócio herdam dele. Fornece `created_at`, `updated_at`, `user_created`, `user_updated` (auto-preenchidos via `core.middleware.CurrentUserMiddleware`)
 - **Troca de banco**: Controlada pelo `.env` — `DB_ENV=prd` → PostgreSQL; caso contrário `ACTIVE_DB=sqlite|postgresql` seleciona o backend. Padrão é SQLite (`db.sqlite3`).
-- **Carregamento de env**: `python-dotenv` carrega `.env` na importação do settings. Copiar `.env.example` para `.env` antes de rodar.
+- **Carregamento de env**: `python-decouple` lê o `.env` (variáveis de ambiente têm precedência). Copiar `.env.example` para `.env` antes de rodar.
 
 ## Apps Django
 <!-- Apps Django — Tabela com o propósito de cada app e suas particularidades.
@@ -44,8 +43,8 @@ Ainda não existe suite de testes.
 | `category` | CRUD de categorias (HTML + API) | Mesmo padrão de views duplas |
 | `supplier` | CRUD de fornecedores (HTML + API) | Mesmo padrão de views duplas |
 | `product` | CRUD de produtos (HTML + API) | Depende de `brands` + `category` |
-| `inflow` | CRUD de entradas de estoque (HTML + API) | `signals.py` soma quantidade ao produto ao criar |
-| `outflow` | CRUD de saídas de estoque (HTML + API) | `signals.py` subtrai quantidade do produto ao criar |
+| `inflow` | CRUD de entradas de estoque (HTML + API) | `signals.py` soma a quantidade ao produto (create/update/delete) |
+| `outflow` | CRUD de saídas de estoque (HTML + API) | `signals.py` subtrai a quantidade do produto (create/update/delete) |
 
 ## Padrões importantes
 <!-- Padrões importantes — Padrões que não são óbvios só olhando os nomes:
@@ -58,7 +57,7 @@ Ainda não existe suite de testes.
     renderizam. -->
 
 - **Interface dupla**: Cada app de negócio serve HTML (CBV Django com `LoginRequiredMixin` + `PermissionRequiredMixin`) e API REST (DRF generics em `api/v1/`). A API usa `core.permissions.ModelPermissionsByMethod` para verificação de permissão por método HTTP.
-- **Signals de estoque**: `inflow` e `outflow` têm signal `post_save` que atualiza `Product.quantity`. Os apps importam seus signals no `apps.py` via `ready()`.
+- **Signals de estoque**: `inflow` e `outflow` ajustam `Product.quantity` em `create`, `update` (delta e troca de produto) e `delete`, via `pre_save`/`post_save`/`post_delete` (helper `core.stock.apply_stock_delta`). Os apps importam seus signals no `apps.py` via `ready()`.
 - **CurrentUserMiddleware**: Armazena `request.user` em thread-local para que `BaseModel.save()` preencha `user_created`/`user_updated` sem precisar passar o request pelos forms.
 - **DETAIL_LAYOUT** (valores: `minimal`, `table`, `cards`, `fine`, `badges`) controla a renderização do template de detail via context processor.
 
