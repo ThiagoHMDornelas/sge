@@ -1,7 +1,7 @@
 # Sistema de Gestão de Estoque (SGE)
 
 ![Testes](https://github.com/ThiagoHMDornelas/sge/actions/workflows/tests.yml/badge.svg)
-![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![Django](https://img.shields.io/badge/django-5.0-092E20)
 ![DRF](https://img.shields.io/badge/DRF-3.16-red)
 
@@ -78,7 +78,7 @@ sge/
 
 Pré-requisitos:
 
-- Python 3.11 ou 3.12 instalado
+- Python 3.11 ou superior instalado
 
 Crie um ambiente virtual:
 
@@ -128,7 +128,7 @@ Copie o `.env.example` para `.env` e ajuste os valores:
     # Django
     SECRET_KEY=troque-por-uma-chave-secreta
     DEBUG=True
-    ALLOWED_HOSTS=127.0.0.1,localhost
+    ALLOWED_HOSTS=0.0.0.0,127.0.0.1,localhost
 
     # Cookies
     SESSION_COOKIE_NAME=sge_sessionid
@@ -205,7 +205,11 @@ A suíte cobre modelos, formulários, views, *signals* de estoque e endpoints da
 
     python manage.py test
 
-A suíte também roda automaticamente a cada `push` e `pull request` via **GitHub Actions** (`.github/workflows/tests.yml`) — em **SQLite** e também em **PostgreSQL** — e o resultado é exibido no badge no topo deste README.
+O **lint** do código é feito com `flake8` (configuração em `.flake8`):
+
+    flake8
+
+A suíte e o lint também rodam automaticamente a cada `push` e `pull request` via **GitHub Actions** (`.github/workflows/tests.yml`): o pipeline executa o **lint (flake8)** e os testes em **SQLite** e também em **PostgreSQL**. O resultado é exibido no badge no topo deste README.
 
 ## Principais rotas
 
@@ -215,8 +219,12 @@ A suíte também roda automaticamente a cada `push` e `pull request` via **GitHu
 | `/login/`, `/logout/` | Autenticação |
 | `/profile/` | Perfil do usuário |
 | `/products/list/`, `/products/create/` | Listagem e cadastro de produtos |
-| `/brands/`, `/categories/`, `/suppliers/` | CRUDs (list/create/detail/update/delete) |
-| `/inflows/`, `/outflows/` | Entradas e saídas de estoque |
+| `/products/<id>/detail/`, `/products/<id>/update/`, `/products/<id>/delete/` | Detalhe, edição e exclusão de produto |
+| `/brands/list/`, `/brands/create/`, `/brands/<id>/detail/`, `/brands/<id>/update/`, `/brands/<id>/delete/` | CRUD de marcas |
+| `/categories/list/`, `/categories/create/`, `/categories/<id>/detail/`, `/categories/<id>/update/`, `/categories/<id>/delete/` | CRUD de categorias |
+| `/suppliers/list/`, `/suppliers/create/`, `/suppliers/<id>/detail/`, `/suppliers/<id>/update/`, `/suppliers/<id>/delete/` | CRUD de fornecedores |
+| `/inflows/list/`, `/inflows/create/`, `/inflows/<id>/detail/` | Entradas de estoque |
+| `/outflows/list/`, `/outflows/create/`, `/outflows/<id>/detail/` | Saídas de estoque |
 | `/api/v1/...` | API REST |
 | `/api/docs/` | Documentação interativa da API (Swagger) |
 | `/admin/` | Painel administrativo |
