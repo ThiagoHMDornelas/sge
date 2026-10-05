@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Linguagem do GitHub (Linguist): não contar templates e arquivos estáticos
+*.html linguist-detectable=false
+static/* linguist-detectable=false
