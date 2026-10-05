@@ -158,22 +158,50 @@ O projeto pode rodar com dois bancos, controlados pelas variáveis `DB_ENV` e `A
 
 ## Executar com Docker
 
-Com o Docker e o Docker Compose instalados, é possível subir a aplicação e o PostgreSQL sem configurar o ambiente Python manualmente:
+Com o Docker (Desktop) e o Docker Compose instalados, é possível subir a aplicação e o PostgreSQL sem configurar o ambiente Python manualmente. A porta `8000` precisa estar livre.
 
-    docker compose up --build
+1. Suba os serviços (a primeira execução compila a imagem):
+
+       docker compose up --build -d
+
+2. Acompanhe até o banco ficar `healthy` e a aplicação `Up`:
+
+       docker compose ps
+
+   O `sge_web` só inicia depois que o `sge_db` fica saudável (via `healthcheck`), então não há erros de conexão na inicialização. As migrações são aplicadas automaticamente.
 
 Serviços:
 
 - `sge_web` → aplicação Django em `http://localhost:8000/`
 - `sge_db` → PostgreSQL 17 (dados persistidos em volume)
 
-As migrações são aplicadas automaticamente na inicialização. O superusuário é criado manualmente com `createsuperuser --noinput`, usando as variáveis `DJANGO_SUPERUSER_*` do `.env`:
+3. Acesse:
 
-    docker compose exec sge_web python manage.py createsuperuser --noinput
+- Aplicação: `http://localhost:8000/`
+- Login: `http://localhost:8000/login/`
+- Documentação da API (Swagger): `http://localhost:8000/api/docs/`
 
-Para parar e remover os containers:
+4. Crie o superusuário (usa as variáveis `DJANGO_SUPERUSER_*` do `.env`):
 
-    docker compose down
+       docker compose exec sge_web python manage.py createsuperuser --noinput
+
+   Para digitar usuário e senha manualmente, remova o `--noinput`.
+
+5. (Opcional) Obtenha um token JWT pela API:
+
+       curl -X POST http://localhost:8000/api/v1/authentication/token/ -H "Content-Type: application/json" -d "{\"username\":\"seu_usuario\",\"password\":\"sua_senha\"}"
+
+6. Para acompanhar os logs (opcional):
+
+       docker compose logs -f sge_web
+
+7. Para parar e remover os containers:
+
+       docker compose down
+
+   Para remover também o banco de dados (volume):
+
+       docker compose down -v
 
 ## API REST
 
