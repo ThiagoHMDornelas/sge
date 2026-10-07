@@ -219,7 +219,7 @@ Espere o `sge_db` como `healthy` e o `sge_web` como `Up`. O `sge_web` só inicia
 - Login: `http://localhost:8000/login/`
 - Documentação da API (Swagger): `http://localhost:8000/api/docs/`
 
-**6. Crie o superusuário** (usa as variáveis `DJANGO_SUPERUSER_*` do `.env`):
+**6. Crie o superusuário.** Antes, preencha `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_EMAIL` e `DJANGO_SUPERUSER_PASSWORD` no `.env` — com esses campos vazios (como no `.env.example`), o `--noinput` falha com o erro *"Usuário cannot be blank"*:
 
 ```powershell
 docker compose exec sge_web python manage.py createsuperuser --noinput
