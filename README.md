@@ -4,6 +4,7 @@
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![Django](https://img.shields.io/badge/django-5.0-092E20)
 ![DRF](https://img.shields.io/badge/DRF-3.16-red)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 Sistema de gestão de estoque desenvolvido com Django e Django REST Framework. Controla produtos, marcas, categorias e fornecedores, além de entradas e saídas de estoque com atualização automática das quantidades. Oferece interface web (templates) e API REST autenticada por JWT.
 
@@ -158,50 +159,112 @@ O projeto pode rodar com dois bancos, controlados pelas variáveis `DB_ENV` e `A
 
 ## Executar com Docker
 
-Com o Docker (Desktop) e o Docker Compose instalados, é possível subir a aplicação e o PostgreSQL sem configurar o ambiente Python manualmente. A porta `8000` precisa estar livre.
+A forma recomendada de rodar o sistema. O Docker Compose sobe a aplicação **e** o PostgreSQL já configurados, sem precisar montar o ambiente Python manualmente.
 
-1. Suba os serviços (a primeira execução compila a imagem):
+**Pré-requisitos:**
 
-       docker compose up --build -d
+- Docker Desktop instalado e em execução (engine)
+- Docker Compose (já vem com o Docker Desktop)
+- Git instalado (para clonar o repositório)
+- A porta `8000` livre
 
-2. Acompanhe até o banco ficar `healthy` e a aplicação `Up`:
+> **Importante:** o Docker Desktop sozinho **não** faz o setup inicial — ele é o *engine* e o painel de gerenciamento. Criar o `.env` e rodar `docker compose up --build` são feitos pelo **terminal**; o Docker Desktop é ótimo para acompanhar logs, iniciar/parar e abrir um terminal dentro do container **depois** que a stack subiu.
 
-       docker compose ps
+> **Atenção:** neste projeto o `docker-compose.yml` usa `env_file: .env`, então o arquivo `.env` é **obrigatório** — sem ele o `docker compose up` falha. Crie-o no passo 2.
 
-   O `sge_web` só inicia depois que o `sge_db` fica saudável (via `healthcheck`), então não há erros de conexão na inicialização. As migrações são aplicadas automaticamente.
+### Passo a passo (via shell / PowerShell)
 
-Serviços:
+**1. Clone o repositório**
 
-- `sge_web` → aplicação Django em `http://localhost:8000/`
-- `sge_db` → PostgreSQL 17 (dados persistidos em volume)
+```powershell
+git clone https://github.com/ThiagoHMDornelas/sge.git
+cd sge
+```
 
-3. Acesse:
+> O `git clone` cria a pasta `sge` dentro da pasta atual, e o `cd` entra nela. Se você **já está dentro** da pasta do projeto, **pule o `cd`**.
+
+**2. Crie o arquivo de ambiente**
+
+```powershell
+copy .env.example .env        # Windows
+# cp .env.example .env        # Linux/macOS
+```
+
+> Atenção: se você **já tem** um `.env` na pasta, o comando acima vai **sobrescrevê-lo**. Nesse caso, **pule este passo** e apenas edite o `.env` existente.
+
+As variáveis `POSTGRES_*` têm valores padrão no Compose, mas o `.env` é necessário para o `SECRET_KEY` e demais configurações. Veja a seção [Variáveis de ambiente](#variáveis-de-ambiente).
+
+**3. Suba a stack.** Na primeira execução o Docker baixa a imagem do PostgreSQL e compila a imagem da aplicação — pode levar alguns minutos:
+
+```powershell
+docker compose up --build -d
+```
+
+**4. Confira os containers:**
+
+```powershell
+docker compose ps
+```
+
+Espere o `sge_db` como `healthy` e o `sge_web` como `Up`. O `sge_web` só inicia depois que o banco fica saudável (via `healthcheck`), então não há erros de conexão na inicialização. As migrações são aplicadas automaticamente.
+
+| Serviço | Porta | Acesso |
+|---|---|---|
+| `sge_web` | 8000 | `http://localhost:8000` |
+| `sge_db` | 5432 (interna) | — |
+
+**5. Acesse:**
 
 - Aplicação: `http://localhost:8000/`
 - Login: `http://localhost:8000/login/`
 - Documentação da API (Swagger): `http://localhost:8000/api/docs/`
 
-4. Crie o superusuário (usa as variáveis `DJANGO_SUPERUSER_*` do `.env`):
+**6. Crie o superusuário** (usa as variáveis `DJANGO_SUPERUSER_*` do `.env`):
 
-       docker compose exec sge_web python manage.py createsuperuser --noinput
+```powershell
+docker compose exec sge_web python manage.py createsuperuser --noinput
+```
 
-   Para digitar usuário e senha manualmente, remova o `--noinput`.
+> Para digitar usuário e senha manualmente, remova o `--noinput`.
 
-5. (Opcional) Obtenha um token JWT pela API:
+**7. (Opcional) Obtenha um token JWT pela API:**
 
-       curl -X POST http://localhost:8000/api/v1/authentication/token/ -H "Content-Type: application/json" -d "{\"username\":\"seu_usuario\",\"password\":\"sua_senha\"}"
+```powershell
+curl -X POST http://localhost:8000/api/v1/authentication/token/ -H "Content-Type: application/json" -d "{\"username\":\"seu_usuario\",\"password\":\"sua_senha\"}"
+```
 
-6. Para acompanhar os logs (opcional):
+**8. Comandos úteis:**
 
-       docker compose logs -f sge_web
+```powershell
+docker compose logs -f sge_web     # logs da aplicação
+docker compose logs -f sge_db      # logs do banco
+docker compose restart sge_web     # reinicia a aplicação
+docker compose down                # para e remove os containers
+docker compose down -v             # remove também o volume (banco de dados)
+```
 
-7. Para parar e remover os containers:
+> Os dados do PostgreSQL ficam no volume `postgres_data` e **persistem** entre reinícios. O `docker compose down -v` apaga o banco.
 
-       docker compose down
+### Usando o Docker Desktop (interface gráfica)
 
-   Para remover também o banco de dados (volume):
+Depois que a stack estiver no ar (passo 3), o Docker Desktop ajuda a operar. Na aba **Containers** você verá o grupo `sge` com os serviços `sge_web` e `sge_db`:
 
-       docker compose down -v
+- **Logs**: clique em um container → aba *Logs* (equivale a `docker compose logs`).
+- **Start / Stop / Restart**: botões no topo do container ou do grupo.
+- **Terminal no container**: botão *Exec* (útil para depurar dentro do container).
+- **Abrir no navegador**: clique na porta publicada (`8000:8000`).
+- **Limpeza**: *Delete* remove o grupo de containers; em **Volumes** você apaga o banco.
+
+O que **não** dá para fazer pela interface gráfica: criar o `.env` e rodar `docker compose up --build` em um clone novo (isso é feito pelo terminal).
+
+### Problemas comuns
+
+- **A aplicação não abre / erro de conexão com o banco**
+  - Veja os logs: `docker compose logs -f sge_web` e `docker compose logs -f sge_db`
+  - Confirme que o `sge_db` está `healthy`: `docker compose ps`
+- **`docker compose up` falha com "env file .env not found"** → crie o `.env` (passo 2)
+- **Erro de porta em uso** (`8000`) → pare o serviço que ocupa a porta ou ajuste o mapeamento no `docker-compose.yml` (ex.: `8001:8000`) e acesse em `http://localhost:8001`
+- **Os dados sumiram** → você rodou `docker compose down -v` (remove o volume do banco). Use `docker compose down` para manter os dados
 
 ## API REST
 
