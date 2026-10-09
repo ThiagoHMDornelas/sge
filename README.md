@@ -8,9 +8,14 @@
 
 Sistema de gestão de estoque desenvolvido com Django e Django REST Framework. Controla produtos, marcas, categorias e fornecedores, além de entradas e saídas de estoque com atualização automática das quantidades. Oferece interface web (templates) e API REST autenticada por JWT.
 
+![Dashboard do SGE](docs/img/sge_dashboard.png)
+
+*Dashboard — indicadores de estoque, vendas e gráficos.*
+
 ## Sumário
 
 - [Visão geral](#visão-geral)
+- [Telas do projeto](#telas-do-projeto)
 - [Funcionalidades](#funcionalidades)
 - [Tecnologias](#tecnologias)
 - [Estrutura do projeto](#estrutura-do-projeto)
@@ -27,6 +32,20 @@ Sistema de gestão de estoque desenvolvido com Django e Django REST Framework. C
 ## Visão geral
 
 O **SGE** é um sistema web e de API para gerenciamento de estoque. Usuários autenticados e com permissão podem cadastrar, listar, alterar e remover marcas, categorias, fornecedores e produtos. Cada movimento de **entrada** soma e cada **saída** subtrai automaticamente a quantidade do produto em estoque, via *signals* do Django. A tela inicial apresenta indicadores e gráficos de produtos e vendas.
+
+## Telas do projeto
+
+**Produtos** — listagem com busca, filtros por categoria e marca, ordenação e ações:
+
+![Produtos](docs/img/sge_products.png)
+
+**Entradas de estoque** — movimentações de entrada com atualização automática da quantidade:
+
+![Entradas](docs/img/sge_inflows.png)
+
+**Login** — acesso ao sistema:
+
+![Login](docs/img/sge_login.png)
 
 ## Funcionalidades
 
