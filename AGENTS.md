@@ -1,89 +1,50 @@
-# SGE - Sistema de Gestão de Estoque
+# AGENTS.md — sge
 
-Django 5 + DRF + SimpleJWT. Locale pt-br.
+> Gerado automaticamente na clonagem para a VPS (21/10/2026). **Revisar**: ajuste o que não bater com a realidade do projeto.
 
-## Comandos
+## Visão geral
+**Sistema de Gestão de Estoque**: API REST (Django + DRF) com autenticação JWT, documentação OpenAPI e fluxos de entrada/saída de produtos.
 
+**Stack:** Django 5.0.14 · DRF 3.16 · SimpleJWT · drf-spectacular · Python 3.12 · SQLite (dev) ou PostgreSQL · Docker
+
+## Contexto em camadas
+`~/.hermes/SOUL.md` (regras globais) → `~/projetos/python/AGENTS.md` (regras da linguagem) → este arquivo (particularidades do projeto).
+Em conflito, vale o mais específico (este arquivo), exceto em regras de segurança/global.
+
+## Estrutura
+- `app/` — projeto Django (`app/settings.py`)
+- `authentication/` — login JWT
+- `core/` — base compartilhada
+- `brands/`, `category/`, `supplier/`, `product/` — cadastros
+- `inflow/`, `outflow/` — movimentações de estoque
+
+## Como rodar
 ```bash
-python manage.py migrate          # aplicar migrações
-python manage.py runserver        # servidor de desenvolvimento :8000
-python manage.py test             # suite de testes
-flake8                            # lint (ignora E501, exclui .venv)
-pip install -r requirements_dev.txt  # deps de dev (flake8)
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt -r requirements_dev.txt
+cp .env.example .env
+python manage.py migrate
+python manage.py runserver
+```
+No Docker o `CMD` já roda `migrate` antes do `runserver`.
+
+## Testes e lint
+```bash
+python manage.py test
+flake8
 ```
 
-O CI (GitHub Actions) roda lint (`flake8`) e a suíte de testes em SQLite e PostgreSQL a cada push/PR em `main` (`.github/workflows/tests.yml`).
+## Banco de dados
+`DB_ENV=dev` + `ACTIVE_DB=sqlite` por padrão (nenhum serviço extra). Para PostgreSQL: `ACTIVE_DB=postgresql` + `POSTGRES_*`; para Docker, descomentar o bloco `prd` do `.env.example`.
 
-## Arquitetura
-<!-- Arquitetura — Três pegadinhas principais:
-  1. O módulo de settings é `app.settings`, não `sge.settings` (padrão Django).
-     Se errar isso, nada funciona.
-  2. Todos os modelos herdam de `BaseModel`, que adiciona automaticamente
-     created_at, updated_at, user_created e user_updated. Nunca use
-     models.Model diretamente.
-  3. O `CurrentUserMiddleware` guarda o usuário em thread-local para preencher
-     user_created/user_updated sem precisar passar o request pelo form. -->
-
-- **Módulo de settings**: `app.settings` (não é o padrão Django `sge.settings`)
-- **Modelo base**: `core.models.BaseModel` — todos os models de negócio herdam dele. Fornece `created_at`, `updated_at`, `user_created`, `user_updated` (auto-preenchidos via `core.middleware.CurrentUserMiddleware`)
-- **Troca de banco**: Controlada pelo `.env` — `DB_ENV=prd` → PostgreSQL; caso contrário `ACTIVE_DB=sqlite|postgresql` seleciona o backend. Padrão é SQLite (`db.sqlite3`).
-- **Carregamento de env**: `python-decouple` lê o `.env` (variáveis de ambiente têm precedência). Copiar `.env.example` para `.env` antes de rodar.
-
-## Apps Django
-<!-- Apps Django — Tabela com o propósito de cada app e suas particularidades.
-  - `core` é abstrato (sem tabela no banco).
-  - `authentication` cria `Profile` automaticamente via signal. -->
-
-| App | Finalidade | Observações |
-|---|---|---|
-| `app` | Config do projeto, URLs raiz, home, templates | `app/templates/` tem layout base e componentes |
-| `core` | BaseModel, middleware, permissions, context processors | Sem tabela — `BaseModel` é abstrato |
-| `authentication` | Perfil de usuário (avatar), endpoints JWT | Signal cria `Profile` automaticamente ao criar `User` |
-| `brands` | CRUD de marcas (HTML + API) | Views duplas: CBV + DRF generics |
-| `category` | CRUD de categorias (HTML + API) | Mesmo padrão de views duplas |
-| `supplier` | CRUD de fornecedores (HTML + API) | Mesmo padrão de views duplas |
-| `product` | CRUD de produtos (HTML + API) | Depende de `brands` + `category` |
-| `inflow` | CRUD de entradas de estoque (HTML + API) | `signals.py` soma a quantidade ao produto (create/update/delete) |
-| `outflow` | CRUD de saídas de estoque (HTML + API) | `signals.py` subtrai a quantidade do produto (create/update/delete) |
-
-## Padrões importantes
-<!-- Padrões importantes — Padrões que não são óbvios só olhando os nomes:
-  - Interface dupla: cada app de negócio tem views HTML (CBV com login +
-    permissão) E endpoints API (DRF em api/v1/). Ao criar um novo CRUD,
-    precisa seguir esse padrão duplo.
-  - Signals de estoque: `inflow` soma quantidade ao produto, `outflow`
-    subtrai. Ambos rodam no post_save e são importados no apps.py via ready().
-  - DETAIL_LAYOUT: configuração que controla como os templates de detail
-    renderizam. -->
-
-- **Interface dupla**: Cada app de negócio serve HTML (CBV Django com `LoginRequiredMixin` + `PermissionRequiredMixin`) e API REST (DRF generics em `api/v1/`). A API usa `core.permissions.ModelPermissionsByMethod` para verificação de permissão por método HTTP.
-- **Signals de estoque**: `inflow` e `outflow` ajustam `Product.quantity` em `create`, `update` (delta e troca de produto) e `delete`, via `pre_save`/`post_save`/`post_delete` (helper `core.stock.apply_stock_delta`). Os apps importam seus signals no `apps.py` via `ready()`.
-- **CurrentUserMiddleware**: Armazena `request.user` em thread-local para que `BaseModel.save()` preencha `user_created`/`user_updated` sem precisar passar o request pelos forms.
-- **DETAIL_LAYOUT** (valores: `minimal`, `table`, `cards`, `fine`, `badges`) controla a renderização do template de detail via context processor.
-
-## Docker
-<!-- Docker — O entrypoint roda migrate + runserver. O superusuário é criado
-manualmente com createsuperuser --noinput (variáveis DJANGO_SUPERUSER_*). -->
-
-```bash
-docker compose up        # inicia sge_web (:8000) + sge_db (PostgreSQL 17)
-```
-
-O entrypoint do Docker roda `migrate` e depois `runserver`. O superusuário é criado manualmente:
-
-```bash
-docker compose exec sge_web python manage.py createsuperuser --noinput
-```
-
-As variáveis `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_EMAIL` e `DJANGO_SUPERUSER_PASSWORD` do `.env` são usadas por esse comando.
+## Particularidades
+- Cookies de sessão/CSRF usam prefixo `sge_` (`SESSION_COOKIE_NAME`, `CSRF_COOKIE_NAME`).
+- Documentação da API via drf-spectacular.
+- Estoque só deve mudar por `inflow`/`outflow`, não por edição direta de `product`.
 
 ## Convenções
-<!-- Convenções — Convenções que diferem do padrão Django: locale pt-br,
-ordenação com Lower() para campos de texto, JWT com lifetime longo
-(1 dia access / 7 dias refresh). -->
-
-- Locale: `pt-br` / `America/Sao_Paulo`
-- Todos os models usam `BaseModel` de `core.models` (nunca `models.Model` direto)
-- Ordenação padrão: campos de texto usam `Lower()` para ordenação case-insensitive; inflow/outflow ordenam por `-created_at`
-- Arquivos estáticos: `static/` → coletados em `staticfiles/`; mídia em `media/`
-- JWT: access token 1 dia; refresh 7 dias
+- Secrets **sempre** em `.env` (nunca hardcode); mantenha o `.env.example` atualizado e o `.env` fora do versionamento.
+- Migrações que apagam ou tornam campo obrigatório sem `default` precisam de aviso antes de rodar em produção.
+- Mensagens de UI/validação em português do Brasil, revisadas (acentuação e concordância).
+- Não commitar/pushar por conta própria: as alterações ficam prontas para o usuário revisar e commitar.
+- Preservar encoding dos arquivos ao editar (não converter ANSI ↔ UTF-8 sem pedido explícito).
